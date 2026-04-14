@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: fct_customers
+    description: Customer fact table with segmentation
+    columns:
+      - name: id
+        description: Customer ID
+        tests:
+          - unique
+          - not_null
+      - name: order_amount
+        description: Order amount
+        tests:
+          - not_null

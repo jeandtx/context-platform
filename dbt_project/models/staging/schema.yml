@@ -19,26 +19,13 @@ models:
         description: Order amount
 
   - name: stg_indicators
-    description: Staging layer - indicator data from parquet
+    description: Word population by countries staging layer from parquet
 
   - name: stg_country_codes
-    description: Staging layer - country codes reference data from parquet
+    description: Country codes staging layer from parquet
 
   - name: stg_events
-    description: Staging layer - event data from parquet
+    description: Sport events from open dataset staging layer from parquet
 
   - name: stg_matches
-    description: Staging layer - matches data from parquet
-
-  - name: fct_customers
-    description: Customer fact table with segmentation
-    columns:
-      - name: id
-        description: Customer ID
-        tests:
-          - unique
-          - not_null
-      - name: order_amount
-        description: Order amount
-        tests:
-          - not_null
+    description: Sport matches from open dataset staging layer from parquet
