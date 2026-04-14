@@ -1,0 +1,12 @@
+[project]
+name = "dbt-project"
+version = "0.1.0"
+description = "POC: DuckDB + dbt + Evidence.dev"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "duckdb>=1.0.0",
+    "dbt-core>=1.8.0",
+    "dbt-duckdb>=1.8.0",
+    "evidence>=0.3.0",
+]

@@ -1,0 +1,21 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+
+# dbt project
+target/
+dbt_project/target/
+dbt_project/logs/
+dbt_packages/
+.dbt/
+.vscode/
+logs/
+.DS_Store
