@@ -18,6 +18,18 @@ models:
       - name: order_amount
         description: Order amount
 
+  - name: stg_indicators
+    description: Staging layer - indicator data from parquet
+
+  - name: stg_country_codes
+    description: Staging layer - country codes reference data from parquet
+
+  - name: stg_events
+    description: Staging layer - event data from parquet
+
+  - name: stg_matches
+    description: Staging layer - matches data from parquet
+
   - name: fct_customers
     description: Customer fact table with segmentation
     columns:

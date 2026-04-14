@@ -1,0 +1,37 @@
+-- Staging model: Clean and transform matches data
+{{ config(materialized='view') }}
+
+select
+    match_id,
+    match_date,
+    kick_off,
+    home_score,
+    away_score,
+    match_status,
+    match_status_360,
+    match_week,
+    last_updated,
+    last_updated_360,
+    competition_id,
+    competition_name,
+    competition_country,
+    season_id,
+    season_name,
+    home_team_id,
+    home_team_name,
+    home_team_gender,
+    home_team_country,
+    away_team_id,
+    away_team_name,
+    away_team_gender,
+    away_team_country,
+    competition_stage_id,
+    competition_stage_name,
+    stadium_id,
+    stadium_name,
+    stadium_country,
+    referee_id,
+    referee_name,
+    referee_country,
+    data_version
+from {{ ref('raw_matches') }}
