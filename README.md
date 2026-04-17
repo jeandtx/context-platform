@@ -1,212 +1,182 @@
-# DuckDB + dbt + Evidence.dev POC
+# Plateforme de Contexte — Projet dbt
 
-A complete Proof of Concept demonstrating the integration of three powerful data tools:
+## 🎯 Vue d'ensemble
 
-- **DuckDB**: Fast in-process SQL OLAP database
-- **dbt**: Data transformation tool for building analytics-ready data structures
-- **Evidence.dev**: BI dashboard builder for creating web-based dashboards
-
-## 🎯 Project Overview
-
-This POC demonstrates a complete data pipeline:
+Ce projet démontre un pipeline de données complet :
 
 ```
-Raw Data (CSV) → DuckDB → dbt Models → Evidence.dev Dashboard
+Données brutes (CSV) → DuckDB → Modèles dbt → Analyses finales
 ```
 
-The project includes:
+Le projet inclut :
 
-- 8 sample customers with transactional data
-- dbt models for data staging and transformation
-- Data quality tests (uniqueness, not null constraints)
-- An Evidence.dev dashboard with visualizations and metrics
+- Données clients et transactionnelles de démonstration
+- Modèles dbt pour la représentation intermédiaire et la transformation
+- Tests de qualité des données (unicité, contraintes NOT NULL)
+- Documentation métier complète via les fichiers `.context.md`
 
-## 📋 Prerequisites
+## 📋 Prérequis
 
 - Python 3.10+
-- Node.js 16+ (for Evidence.dev)
-- pip package manager
+- pip (gestionnaire de paquets Python)
 - Git
 
-## 🚀 Quick Start
+## 🚀 Démarrage rapide
 
-### 1. Clone and Setup the Repository
+### 1. Configuration de l'environnement
 
 ```bash
 cd "/Users/ippon/Documents/CODE/INTERCONTRAT/context platform/dbt project"
-python -m venv .venv
+uv venv .venv
 source .venv/bin/activate
 ```
 
-### 2. Install Dependencies
+### 2. Installation des dépendances
 
 ```bash
-pip install -r requirements.txt
-# OR manually install:
-pip install duckdb>=1.0.0 dbt-core>=1.8.0 dbt-duckdb>=1.8.0 evidence>=0.3.0
+uv sync
 ```
 
-### 3. Build dbt Models
+### 3. Construire les modèles dbt
 
 ```bash
 cd dbt_project
 export DBT_PROFILES_DIR=../.dbt
-dbt run      # Build all models
-dbt test     # Run data quality tests
+dbt run      # Construire tous les modèles
+dbt test     # Exécuter les tests de qualité des données
 ```
 
-Expected output:
-
-```
-Finished running 1 table model, 2 view models in X seconds
-Done. PASS=3 WARN=0 ERROR=0
-Completed successfully
-```
-
-### 4. Validate the Complete Chain
+### 4. Démarrer Evidence.dev
 
 ```bash
-cd ..
-python validate_poc.py
+npm --prefix ./reports run dev
 ```
 
-This will display:
+Ouvrir http://localhost:3000 dans le navigateur pour voir le tableau de bord.
 
-- ✅ DuckDB connection status
-- 📊 Available tables/views (raw_customers, stg_customers, fct_customers)
-- 📈 Sample customer data with segmentation
-- 💰 Aggregated metrics by customer segment
-
-### 5. Start the Evidence Dashboard
-
-```bash
-cd evidence
-# Install Evidence CLI if not already installed
-npm install -g @evidence-dev/cli
-
-# Start the development server
-evidence
-```
-
-Then open http://localhost:3000 in your browser to view the Customer Dashboard.
-
-## 📁 Project Structure
+## 📁 Structure du projet
 
 ```
 .
-├── README.md                          # This file
-├── pyproject.toml                     # Python dependencies
-├── validate_poc.py                    # Validation script
-├── dbt.duckdb                         # DuckDB database file (auto-created)
+├── README.md                          # Ce fichier
+├── pyproject.toml                     # Dépendances Python
+├── dbt.duckdb                         # Fichier base de données DuckDB (créé automatiquement)
 │
 ├── .dbt/
-│   └── profiles.yml                   # dbt profile configuration for DuckDB
+│   └── profiles.yml                   # Configuration du profil dbt pour DuckDB
 │
-├── dbt_project/                       # dbt project root
-│   ├── dbt_project.yml                # dbt project configuration
-│   ├── models/
-│   │   ├── schema.yml                 # Model and test definitions
-│   │   ├── staging/
-│   │   │   ├── raw_customers.sql      # Raw data (SQL-based seed)
-│   │   │   └── stg_customers.sql      # Staging transformation
-│   │   └── marts/
-│   │       └── fct_customers.sql      # Fact table with segmentation
-│   ├── tests/                         # Custom dbt tests (if any)
-│   ├── data/                          # Seed data (optional CSV files)
-│   └── target/                        # Compiled models (auto-generated)
+├── CONTEXT-SCHEMA.md                  # Schéma de documentation des modèles
 │
-└── evidence/                          # Evidence.dev dashboard
-    ├── evidence.yml                   # Evidence project configuration
-    ├── package.json                   # Node.js dependencies
-    ├── sources/
-    │   └── duckdb.source.yml          # DuckDB data source configuration
-    └── pages/
-        └── customers.md               # Customer dashboard page
+└── dbt_project/                       # Racine du projet dbt
+    ├── dbt_project.yml                # Configuration du projet dbt
+    ├── models/
+    │   ├── schema.yml                 # Définitions des modèles et tests
+    │   ├── staging/
+    │   │   ├── raw_*.sql              # Données brutes (sources)
+    │   │   ├── stg_*.sql              # Transformations de représentation intermédiaire
+    │   │   └── *.context.md           # Contextes métier des modèles de staging
+    │   └── marts/
+    │       ├── dim_*.sql              # Tables de dimension
+    │       ├── fct_*.sql              # Tables de faits
+    │       ├── kpi_*.sql              # Indicateurs clés de performance
+    │       └── *.context.md           # Contextes métier des modèles de marts
+    ├── tests/
+    │   └── e2e_test_suite.context.md  # Documentation des tests E2E
+    ├── logs/
+    │   └── query_log.sql              # Journal des requêtes exécutées
+    ├── reports/                       # Tableau de bord Evidence.dev
+    │   ├── evidence.config.yaml       # Configuration Evidence
+    │   ├── package.json               # Dépendances Node.js
+    │   ├── pages/                     # Pages du tableau de bord
+    │   │   └── *.md
+    │   └── sources/                   # Sources de données
+    │       ├── dbt.duckdb             # Base de données DuckDB
+    │       └── *.sql
+    └── target/                        # Modèles compilés (généré automatiquement)
 ```
 
-## 📊 Data Models
+## � Early Binding vs Late Binding
 
-### raw_customers (View)
+### Concept: Deux Approches Complémentaires pour Documenter et Valider les Données
 
-SQL-based seed table containing 8 sample customers with:
+Ce projet démontre une approche hybride de gestion des données qui combine deux stratégies de liaison (binding) des données et de leurs contextes :
 
-- id: Customer identifier
-- name: Customer name
-- email: Email address
-- created_at: Account creation date
-- amount: Order amount
+#### 📋 **Early Binding (Contrats dbt)**
 
-### stg_customers (View)
+**Définition** : Liaison précoce des contraintes de données au moment de la _compilation_ et de l'_exécution_ du pipeline dbt.
 
-Staging layer that:
+**Emplacement** : `dbt_project/models/*/schema.yml`
 
-- Renames 'amount' to 'order_amount'
-- Provides a clean interface for downstream models
-- Tests: unique ID, not null ID
+**Caractéristiques** :
 
-### fct_customers (Table)
+- ✅ **Enforced à la compilation** : Les contraintes sont vérifiées dès le lancement de `dbt run` et `dbt test`
+- ✅ **Précises et mesurables** : Définissent exactement quelles colonnes doivent exister, leurs types et leurs validations
+- ✅ **Exécutées automatiquement** : Les tests dbt (NOT NULL, UNIQUE, accepted_values, etc.) s'exécutent à chaque build
+- ⚠️ **Limités en contexte métier** : Décrivent le _quoi_ et le _comment_, pas le _pourquoi_
 
-Fact table with business logic:
+**Commande** : `dbt test` valide tous les contrats définis.
 
-- Rounds order amounts to 2 decimal places
-- Segments customers into 3 tiers:
-    - **High Value**: $2,000+
-    - **Medium Value**: $1,000-$1,999
-    - **Low Value**: <$1,000
-- Tests: unique ID, not null ID, not null order amount
+---
 
-## 🧪 Data Quality
+#### 📖 **Late Binding (Context Store)**
 
-The project includes 5 automated tests:
+**Définition** : Liaison tardive du contexte métier et des spécifications détaillées, documentées _indépendamment_ du pipeline technique.
+
+**Emplacement** : `dbt_project/models/*/[model_name].context.md`
+
+**Caractéristiques** :
+
+- 📝 **Documenté, non exécuté** : Le contexte métier est stocké et documenté mais non validé automatiquement
+- 📊 **Holistique** : Capture la finalité métier, le grain, les transformations, les exclusions et les risques
+- 🔍 **Human-readable** : Destiné à être lu et compris par les métiers et les analystes
+- 🤝 **Source unique de vérité** : Définit l'accord entre technologie et métier
+
+---
+
+### 🔄 Complémentarité : Comment Elles Fonctionnent Ensemble
+
+| Dimension      | Early Binding (Contrats dbt)        | Late Binding (Context Store)                                             |
+| -------------- | ----------------------------------- | ------------------------------------------------------------------------ |
+| **Quand**      | À la compilation / exécution        | Avant et après le développement                                          |
+| **Qui**        | Exécuté par dbt automatiquement     | Lu par les humains, les métiers et les validateurs                       |
+| **Portée**     | Technique : structure et tests      | Métier : intentions, transformations, risques                            |
+| **Validation** | ✅ Automatisée                      | 📋 Manuelle (signature de validation)                                    |
+| **Exemple**    | NOT NULL, UNIQUE, types de colonnes | Objectif = "identifier uniformément les pays", Grain = "par pays unique" |
+| **Réactivité** | Rapide (complet à chaque run)       | Lent (dépend des revues métier)                                          |
+
+### 📚 Workflow Recommandé
+
+1️⃣ **Définir d'abord le contexte métier** → `.context.md`
+
+- Décrire l'objectif, le grain, les transformations
+- Obtenir l'accord des parties prenantes métier
+
+2️⃣ **Traduire en contrats techniques** → `schema.yml`
+
+- Ajouter les tests dbt qui valident le contexte
+- Implémenter les colonnes et les validations
+
+3️⃣ **Valider par exécution** → `dbt run && dbt test`
+
+- Les Early Binding (contrats) vérifient la qualité technique
+
+4️⃣ **Maintenir la cohérence** → Mettre à jour les deux si le modèle change
+
+---
+
+## 📊 Evidence.dev
+
+### Démarrer le tableau de bord
 
 ```bash
-dbt test
+npm --prefix ./reports run dev
 ```
 
-Tests included:
+Le tableau de bord est accessible à http://localhost:3000
 
-1. `unique_stg_customers_id` - Verify customer IDs are unique in staging
-2. `not_null_stg_customers_id` - Verify customer IDs are not null in staging
-3. `unique_fct_customers_id` - Verify customer IDs are unique in fact table
-4. `not_null_fct_customers_id` - Verify customer IDs are not null in fact table
-5. `not_null_fct_customers_order_amount` - Verify order amounts are not null
+## � Configuration
 
-All tests are defined in `dbt_project/models/schema.yml`.
-
-## 📈 Evidence Dashboard
-
-The Evidence dashboard includes:
-
-### Pages
-
-- **customers.md**: Main customer dashboard
-
-### Components
-
-1. **Customer Statistics Table**
-    - Displays all customers with their details
-    - Sortable columns
-    - Download capability
-
-2. **Customer Segmentation Chart**
-    - Bar chart showing distribution across segments
-    - Displays average order amounts
-
-3. **Order Amount Distribution**
-    - Line chart showing individual customer amounts
-    - Ordered by amount descending
-
-### Queries
-
-The dashboard uses three SQL queries:
-
-- `customers_summary`: All customer details
-- `customer_segments`: Segment aggregations
-- `order_distribution`: Individual customer amounts
-
-## 🔧 Configuration Files
-
-### dbt Configuration (`.dbt/profiles.yml`)
+### Configuration dbt (`.dbt/profiles.yml`)
 
 ```yaml
 dbt_poc:
@@ -219,157 +189,18 @@ dbt_poc:
             threads: 4
 ```
 
-### Evidence Configuration (`evidence/evidence.yml`)
+## 📝 Documentation
 
-```yaml
-title: DuckDB + dbt POC Dashboard
-description: Dashboard showcasing the integration of DuckDB, dbt, and Evidence.dev
-```
+### Schéma de contexte
 
-### DuckDB Source (`evidence/sources/duckdb.source.yml`)
+Consultez `CONTEXT-SCHEMA.md` pour comprendre la structure standardisée des fichiers `.context.md`.
 
-```yaml
-type: duckdb
-path: ../dbt.duckdb
-```
+### Fichiers de contexte métier
 
-## 📚 Common Commands
+Chaque modèle dbt possède un fichier `.context.md` correspondant documentant :
 
-### dbt Commands
-
-```bash
-# Build all models
-dbt run
-
-# Run all tests
-dbt test
-
-# Build and test
-dbt run --select stg_customers
-
-# View documentation
-dbt docs generate
-dbt docs serve
-
-# Clean compiled artifacts
-dbt clean
-```
-
-### Evidence Commands
-
-```bash
-# Start development server
-evidence
-
-# Build for production
-evidence build
-
-# Preview built site
-evidence preview
-```
-
-### Python Validation
-
-```bash
-# Run full validation
-python validate_poc.py
-```
-
-## 🔍 Troubleshooting
-
-### Issue: `dbt_poc' profile not found`
-
-**Solution**: Ensure `DBT_PROFILES_DIR` is set correctly:
-
-```bash
-export DBT_PROFILES_DIR=.dbt
-```
-
-### Issue: DuckDB file not found
-
-**Solution**: Run `dbt run` first to create the database:
-
-```bash
-cd dbt_project && dbt run && cd ..
-```
-
-### Issue: Evidence can't connect to DuckDB
-
-**Solution**: Verify the path in `evidence/sources/duckdb.source.yml` is correct:
-
-```yaml
-path: ../dbt.duckdb # relative to evidence/ directory
-```
-
-### Issue: Port 3000 already in use
-
-**Solution**: Use a different port with Evidence:
-
-```bash
-evidence --port 3001
-```
-
-## 📊 Sample Output
-
-After running `python validate_poc.py`:
-
-```
-✅ Successfully connected to dbt.duckdb
-
-📊 Available tables/views:
-  - fct_customers
-  - raw_customers
-  - stg_customers
-
-📈 Customer Metrics (fct_customers table):
-ID  Name            Email                     Amount     Segment
-6   Frank Miller    frank@example.com         $3200.50   High Value
-8   Henry Davis     henry@example.com         $2500.75   High Value
-3   Charlie Brown   charlie@example.com       $2150.00   High Value
-4   Diana Prince    diana@example.com         $1875.25   Medium Value
-1   Alice Johnson   alice@example.com         $1200.50   Medium Value
-
-💰 Customer Segmentation Summary:
-Segment         Count    Avg Amount   Total Amount
-High Value      3        $2617.08     $7851.25
-Medium Value    3        $1391.92     $4175.75
-Low Value       2        $725.38      $1450.75
-```
-
-## 🎓 Learning Resources
-
-- **DuckDB**: https://duckdb.org/docs/
-- **dbt**: https://docs.getdbt.com/
-- **Evidence**: https://docs.evidence.dev/
-- **dbt-duckdb**: https://github.com/dbt-labs/dbt-duckdb
-
-## ✅ Acceptance Criteria
-
-- ✅ `dbt run` executes successfully without errors
-- ✅ `dbt test` passes all 5 data quality tests
-- ✅ Evidence.dev dashboard displays customer data with charts
-- ✅ Complete DuckDB → dbt → Evidence chain validated
-
-## 📝 Notes
-
-- The project uses a simple SQL-based seed for demo data instead of traditional CSV loading
-- All data is stored in a single `dbt.duckdb` file for portability
-- The Evidence dashboard connects to DuckDB using the `@evidence-dev/datasource-duckdb` plugin
-- The project is configured for development mode; production deployments would require additional security and scaling considerations
-
-## 🤝 Next Steps
-
-For enhancing this POC:
-
-1. Add more complex dbt models with joins and aggregations
-2. Implement incremental models for larger datasets
-3. Add custom dbt tests and macros
-4. Create multiple Evidence pages with different metrics
-5. Integrate with a Git repository for version control
-6. Set up CI/CD pipeline for automated testing and deployment
-
----
-
-**Created**: April 14, 2026  
-**Version**: 1.0.0  
-**Status**: ✅ Complete and Validated
+- **Objectifs** : Finalité et grain du modèle
+- **Transformations** : Source, logique appliquée, exclusions
+- **Champs attendus** : Catalogue des colonnes avec types et règles
+- **Tests de logique métier** : Validations et assertions
+- **Notes** : Incertitudes et signatures des validateurs
