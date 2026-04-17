@@ -34,7 +34,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ["Male", "Female", "Mixed"]
+              values: [ "male", "female" ]
       - name: team_country
         description: Country of the team
         tests:
@@ -72,8 +72,6 @@ models:
         description: Winner of the match (home team, away team, or 'draw')
         tests:
           - not_null
-          - accepted_values:
-              values: ["draw"]
 
   - name: dim_population
     description: Dimension table containing historical population data by country and year
@@ -117,41 +115,6 @@ models:
           - not_null
 
   # FACT TABLES
-  - name: fct_customers
-    description: Customer fact table with segmentation
-    columns:
-      - name: id
-        description: Customer ID
-        tests:
-          - unique
-          - not_null
-      - name: name
-        description: Customer full name
-        tests:
-          - not_null
-      - name: email
-        description: Customer email address
-        tests:
-          - not_null
-      - name: created_at
-        description: Account creation date
-        tests:
-          - not_null
-      - name: order_amount
-        description: Total order amount
-        tests:
-          - not_null
-      - name: order_amount_rounded
-        description: Order amount rounded to 2 decimal places
-        tests:
-          - not_null
-      - name: customer_segment
-        description: Customer segment based on order amount (Low Value, Medium Value, High Value)
-        tests:
-          - not_null
-          - accepted_values:
-              values: ["Low Value", "Medium Value", "High Value"]
-
   - name: fact_country_performance
     description: Fact table containing country performance metrics in sports matches
     columns:
