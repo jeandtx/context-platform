@@ -1,0 +1,11 @@
+{
+	"hooks": {
+		"Stop": [
+			{
+				"type": "command",
+				"command": "/bin/bash -c \"echo '\\n=== Session Cost Summary ==='; read -p 'Did you track the cost of this run? (y/n): ' response; if [[ $response == 'y' ]]; then read -p 'Enter the cost: ' cost; echo \\\"Cost recorded: $cost\\\"; else echo 'Cost not recorded'; fi; echo '============================\\n'\"",
+				"timeout": 30
+			}
+		]
+	}
+}
