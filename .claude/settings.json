@@ -4,7 +4,8 @@
       "Bash(dbt run*)",
       "Bash(dbt test*)",
       "Bash(dbt compile*)",
-      "Bash(dbt ls*)"
+      "Bash(dbt ls*)",
+      "Bash(duckdb dbt_project/dbt.duckdb*)"
     ]
   },
   "hooks": {
