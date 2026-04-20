@@ -1,11 +1,23 @@
 {
-	"hooks": {
-		"Stop": [
-			{
-				"type": "command",
-				"command": "/bin/bash -c \"echo '\\n=== Session Cost Summary ==='; read -p 'Did you track the cost of this run? (y/n): ' response; if [[ $response == 'y' ]]; then read -p 'Enter the cost: ' cost; echo \\\"Cost recorded: $cost\\\"; else echo 'Cost not recorded'; fi; echo '============================\\n'\"",
-				"timeout": 30
-			}
-		]
-	}
+  "permissions": {
+    "allow": [
+      "Bash(dbt run*)",
+      "Bash(dbt test*)",
+      "Bash(dbt compile*)",
+      "Bash(dbt ls*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"\nimport os, json, sys\ntry:\n    inp = json.loads(os.environ.get('CLAUDE_TOOL_INPUT', '{}'))\n    path = inp.get('file_path', '')\n    if path.endswith('.context.md'):\n        model = os.path.basename(path).replace('.context.md', '')\n        print(f'\\n[hook] Context updated: {model}.context.md — run /regen {model} to regenerate the SQL model.')\nexcept Exception:\n    pass\n\""
+          }
+        ]
+      }
+    ]
+  }
 }
