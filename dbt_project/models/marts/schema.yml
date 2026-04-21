@@ -1,0 +1,218 @@
+version: 2
+
+models:
+  - name: dim_countries
+    description: >
+      Table de référence officielle des pays pour identifier et classifier
+      uniformément les pays dans l'ensemble du projet. Une ligne par pays unique.
+    columns:
+      - name: country_name
+        description: Nom complet du pays.
+        tests:
+          - not_null
+          - unique
+
+      - name: iso2
+        description: >
+          Code ISO 3166-1 alpha-2 du pays (exactement 2 lettres majuscules).
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_matches
+    description: >
+      Table de dimension des matchs avec équipes, scores et détermination du vainqueur ou match nul.
+      Une ligne par match unique.
+    columns:
+      - name: match_id
+        description: Identifiant unique du match (clé primaire).
+        tests:
+          - not_null
+          - unique
+
+      - name: home_team
+        description: Nom de l'équipe jouant à domicile (renommé depuis home_team_name).
+        tests:
+          - not_null
+
+      - name: away_team
+        description: Nom de l'équipe jouant à l'extérieur (renommé depuis away_team_name).
+        tests:
+          - not_null
+
+      - name: home_score
+        description: Score de l'équipe domicile. Entier, valeur >= 0.
+        tests:
+          - not_null
+
+      - name: away_score
+        description: Score de l'équipe extérieure. Entier, valeur >= 0.
+        tests:
+          - not_null
+
+      - name: winner
+        description: >
+          Vainqueur du match. Contient le nom de l'équipe domicile, le nom de l'équipe extérieure,
+          ou la valeur littérale "draw". Jamais NULL.
+        tests:
+          - not_null
+
+      - name: match_date
+        description: Date du match au format YYYY-MM-DD. Peut être NULL si non disponible.
+
+  - name: dim_teams
+    description: >
+      Table de référence des équipes sportives avec leurs caractéristiques (genre, pays d'origine).
+      Contient une ligne par équipe unique ayant joué au moins un match à domicile.
+      Les équipes n'ayant joué qu'en déplacement sont absentes de cette table.
+    columns:
+      - name: team_id
+        description: Identifiant unique de l'équipe (clé primaire, issu de home_team_id dans stg_matches).
+        tests:
+          - not_null
+          - unique
+
+      - name: team_name
+        description: Nom de l'équipe. Doit être non vide et unique.
+        tests:
+          - not_null
+          - unique
+
+      - name: team_gender
+        description: Genre de l'équipe. Valeurs autorisées normalisées en casse titre (Male, Female, Mixed).
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["Male", "Female", "Mixed"]
+
+      - name: team_country
+        description: Pays d'origine de l'équipe, issu de home_team_country dans stg_matches.
+        tests:
+          - not_null
+
+  - name: dim_population
+    description: >
+      Table de population annuelle par pays (1960–2025) permettant de rapporter
+      les performances sportives en fonction de la taille de la population.
+      Grain : une ligne par combinaison pays + année.
+    columns:
+      - name: country_name
+        description: Nom du pays, issu de la colonne "Country Name" de la source.
+        tests:
+          - not_null
+
+      - name: country_code
+        description: Code du pays (ISO ou code interne), issu de "Country Code".
+        tests:
+          - not_null
+
+      - name: indicator_name
+        description: >
+          Nom lisible de l'indicateur (ex: "Population, total").
+          Doit correspondre à l'indicateur de population totale.
+        tests:
+          - not_null
+
+      - name: indicator_code
+        description: >
+          Code technique de l'indicateur World Bank. Toujours "SP.POP.TOTL"
+          dans ce modèle (filtré en amont).
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['SP.POP.TOTL']
+
+      - name: year
+        description: 'Année de la donnée de population, convertie en entier (ex: "1960" devient 1960).'
+        tests:
+          - not_null
+
+      - name: population_value
+        description: >
+          Valeur brute de la population (non arrondie) en bigint.
+          NULL si la donnée est absente ou non convertible — ces lignes sont exclues du modèle.
+        tests:
+          - not_null
+
+  - name: dim_team_country
+    description: >
+      Table de correspondance entre équipes et pays permettant l'agrégation
+      des performances des équipes par pays. Le matching est effectué par
+      recherche textuelle du nom de pays dans le nom d'équipe (volontairement
+      fragile). Les équipes sans correspondance conservent country_name = NULL.
+    columns:
+      - name: team_id
+        description: Identifiant de l'équipe, issu de dim_teams. Non unique — une équipe peut matcher plusieurs pays.
+        tests:
+          - not_null
+
+      - name: team_name
+        description: Nom complet de l'équipe sportive.
+        tests:
+          - not_null
+
+      - name: country_name
+        description: >
+          Nom du pays correspondant à l'équipe, déterminé par matching textuel
+          (le nom du pays apparaît dans le nom de l'équipe). NULL si aucun pays
+          n'a pu être associé.
+
+  - name: fact_country_performance
+    description: >
+      Table de faits mesurant les performances sportives agrégées par pays (matchs joués
+      et victoires à domicile). Grain : une ligne par pays unique.
+      Seuls les matchs à domicile sont comptabilisés — les matchs en déplacement sont exclus.
+    columns:
+      - name: country_name
+        description: Nom du pays, issu de dim_team_country via correspondance textuelle avec le nom d'équipe.
+        tests:
+          - not_null
+          - unique
+
+      - name: matches_played
+        description: Nombre de matchs à domicile joués par une équipe associée à ce pays.
+        tests:
+          - not_null
+
+      - name: wins
+        description: >
+          Nombre de matchs à domicile remportés par une équipe associée à ce pays
+          (winner = nom de l'équipe). Les matchs nuls (draw) et défaites sont exclus.
+        tests:
+          - not_null
+
+  - name: kpi_performance_vs_population
+    description: >
+      KPI mesurant la performance sportive d'un pays rapportée à sa taille de population,
+      permettant une comparaison équitable entre pays de tailles différentes.
+      Grain : une ligne par pays unique.
+    columns:
+      - name: country_name
+        description: >
+          Nom du pays, clé de jointure entre fact_country_performance et dim_population.
+          Obligatoire et non vide.
+        tests:
+          - not_null
+          - unique
+
+      - name: wins
+        description: >
+          Nombre de victoires à domicile du pays, issu de fact_country_performance.
+          Entier >= 0.
+        tests:
+          - not_null
+
+      - name: population_value
+        description: >
+          Population du pays pour l'année 2023 (année complète la plus récente des données World Bank),
+          issue de dim_population. Valeur brute, strictement > 0.
+        tests:
+          - not_null
+
+      - name: performance_ratio
+        description: >
+          Ratio de performance = wins / population_value. Valeur décimale très petite
+          (ex: 3e-7 pour un pays de 100 millions d'habitants avec 30 victoires).
+          Obligatoire, toujours > 0 car wins >= 0 et population_value > 0.
+        tests:
+          - not_null

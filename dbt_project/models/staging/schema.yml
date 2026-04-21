@@ -1,0 +1,454 @@
+version: 2
+
+models:
+  - name: stg_country_codes
+    description: >
+      Table de référence des pays du monde pour identifier et classifier tous les pays
+      utilisés dans le projet. Source : fichier de référence externe contenant les noms
+      de pays et leurs codes ISO. Grain : une ligne par pays.
+    columns:
+      - name: country_name
+        description: Nom du pays, issu de la colonne "Name" de la source brute.
+        tests:
+          - not_null
+          - unique
+
+      - name: code
+        description: >
+          Code ISO 3166-1 alpha-2 du pays (2 lettres majuscules), issu de la colonne
+          "Code" de la source brute.
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_events
+    description: >
+      Table brute de tous les événements sportifs qui se produisent pendant les matchs,
+      permettant l'analyse détaillée du déroulement du jeu.
+      Grain: une ligne par événement unique (event_id) au sein d'un match (match_id).
+    columns:
+      - name: event_id
+        description: Identifiant unique de l'événement.
+        tests:
+          - not_null
+          - unique
+
+      - name: match_id
+        description: Identifiant du match auquel appartient l'événement. Référence externe.
+        tests:
+          - not_null
+
+      - name: event_index
+        description: Index chronologique de l'événement dans le match (ordre croissant).
+        tests:
+          - not_null
+
+      - name: event_type_id
+        description: Identifiant numérique du type d'événement (classification StatsBomb).
+        tests:
+          - not_null
+
+      - name: event_type_name
+        description: "Nom du type d'événement (ex: pass, shot, dribble, foul, substitution)."
+        tests:
+          - not_null
+
+      - name: period
+        description: Période du match (1 ou 2 pour le temps réglementaire, 3+ pour les prolongations).
+        tests:
+          - not_null
+
+      - name: minute
+        description: Minute de jeu à laquelle l'événement s'est produit.
+        tests:
+          - not_null
+
+      - name: second
+        description: Seconde dans la minute à laquelle l'événement s'est produit.
+        tests:
+          - not_null
+
+      - name: timestamp
+        description: Date et heure précises de l'événement.
+        tests:
+          - not_null
+
+      - name: team_id
+        description: Identifiant de l'équipe associée à l'événement. Peut être NULL pour certains événements.
+
+      - name: team_name
+        description: Nom de l'équipe associée à l'événement. NULL possible.
+
+      - name: player_id
+        description: Identifiant du joueur associé à l'événement. NULL si événement collectif ou sans joueur spécifique.
+
+      - name: player_name
+        description: Nom du joueur associé à l'événement. NULL possible.
+
+      - name: position_id
+        description: Identifiant de la position du joueur sur le terrain. NULL possible.
+
+      - name: position_name
+        description: "Nom de la position du joueur (ex: Goalkeeper, Defender, Midfielder, Forward). NULL possible."
+
+      - name: location_x
+        description: Coordonnée X de la localisation de l'événement sur le terrain. NULL possible. Système de coordonnées à clarifier.
+
+      - name: location_y
+        description: Coordonnée Y de la localisation de l'événement sur le terrain. NULL possible. Système de coordonnées à clarifier.
+
+      - name: possession_team_id
+        description: Identifiant de l'équipe en possession du ballon au moment de l'événement. NULL possible.
+
+      - name: possession_team_name
+        description: Nom de l'équipe en possession du ballon au moment de l'événement. NULL possible.
+
+      - name: play_pattern_id
+        description: Identifiant numérique du motif de jeu. NULL possible.
+
+      - name: play_pattern_name
+        description: "Nom du motif de jeu (ex: Regular Play, Throw In, Corner Kick). NULL possible."
+
+      - name: duration
+        description: Durée de l'action en secondes. NULL possible.
+
+      - name: possession
+        description: Numéro de séquence de possession dans le match. NULL possible.
+
+      - name: under_pressure
+        description: Indicateur booléen signalant si l'action a été effectuée sous pression. NULL possible.
+
+      - name: off_camera
+        description: Indicateur booléen signalant si l'action s'est produite hors caméra. NULL possible.
+
+      - name: out
+        description: Indicateur booléen signalant si le ballon est sorti du terrain. NULL possible.
+
+      - name: counterpress
+        description: Indicateur booléen signalant si l'événement est un contre-pressing. NULL possible.
+
+      - name: pass
+        description: Détails structurés de l'événement si c'est une passe. NULL si l'événement n'est pas une passe.
+
+      - name: shot
+        description: Détails structurés de l'événement si c'est un tir. NULL si l'événement n'est pas un tir.
+
+      - name: carry
+        description: Détails structurés de l'événement si c'est une conduite de balle. NULL si l'événement n'est pas une conduite.
+
+      - name: dribble
+        description: Détails structurés de l'événement si c'est un dribble. NULL si l'événement n'est pas un dribble.
+
+      - name: duel
+        description: Détails structurés de l'événement si c'est un duel. NULL si l'événement n'est pas un duel.
+
+      - name: clearance
+        description: Détails structurés de l'événement si c'est un dégagement. NULL si l'événement n'est pas un dégagement.
+
+      - name: block
+        description: Détails structurés de l'événement si c'est un blocage. NULL si l'événement n'est pas un blocage.
+
+      - name: interception
+        description: Détails structurés de l'événement si c'est une interception. NULL si l'événement n'est pas une interception.
+
+      - name: goalkeeper
+        description: Détails structurés de l'événement si le gardien est impliqué. NULL sinon.
+
+      - name: foul_committed
+        description: Détails structurés de l'événement si c'est une faute commise. NULL sinon.
+
+      - name: foul_won
+        description: Détails structurés de l'événement si c'est une faute obtenue. NULL sinon.
+
+      - name: bad_behaviour
+        description: Détails structurés de l'événement si c'est un carton (mauvais comportement). NULL sinon.
+
+      - name: ball_receipt
+        description: Détails structurés de l'événement si c'est une réception de balle. NULL sinon.
+
+      - name: ball_recovery
+        description: Détails structurés de l'événement si c'est une récupération de balle. NULL sinon.
+
+      - name: miscontrol
+        description: Détails structurés de l'événement si c'est un mauvais contrôle. NULL sinon.
+
+      - name: substitution
+        description: Détails structurés de l'événement si c'est une substitution. NULL sinon.
+
+      - name: tactics
+        description: Données tactiques associées à l'événement (structure à clarifier — JSON structuré ou texte libre). NULL possible.
+
+  - name: stg_indicators
+    description: >
+      Données d'indicateurs mondiaux (notamment population) par pays en format large
+      (une colonne par année, 1960–2025), recopiées telles quelles depuis raw_indicators.
+      La mise en forme vers format long se fait dans dim_population.
+    columns:
+      - name: Country Name
+        description: Nom du pays issu de la source brute (Banque Mondiale).
+      - name: Country Code
+        description: Code ISO ou code interne du pays.
+      - name: Indicator Name
+        description: Libellé de l'indicateur (ex. "Population, total").
+      - name: Indicator Code
+        description: "Code de l'indicateur World Bank (ex. SP.POP.TOTL pour la population totale)."
+      - name: "1960"
+        description: Valeur de l'indicateur pour l'année 1960. NULL si donnée non disponible.
+      - name: "1961"
+        description: Valeur de l'indicateur pour l'année 1961. NULL si donnée non disponible.
+      - name: "1962"
+        description: Valeur de l'indicateur pour l'année 1962. NULL si donnée non disponible.
+      - name: "1963"
+        description: Valeur de l'indicateur pour l'année 1963. NULL si donnée non disponible.
+      - name: "1964"
+        description: Valeur de l'indicateur pour l'année 1964. NULL si donnée non disponible.
+      - name: "1965"
+        description: Valeur de l'indicateur pour l'année 1965. NULL si donnée non disponible.
+      - name: "1966"
+        description: Valeur de l'indicateur pour l'année 1966. NULL si donnée non disponible.
+      - name: "1967"
+        description: Valeur de l'indicateur pour l'année 1967. NULL si donnée non disponible.
+      - name: "1968"
+        description: Valeur de l'indicateur pour l'année 1968. NULL si donnée non disponible.
+      - name: "1969"
+        description: Valeur de l'indicateur pour l'année 1969. NULL si donnée non disponible.
+      - name: "1970"
+        description: Valeur de l'indicateur pour l'année 1970. NULL si donnée non disponible.
+      - name: "1971"
+        description: Valeur de l'indicateur pour l'année 1971. NULL si donnée non disponible.
+      - name: "1972"
+        description: Valeur de l'indicateur pour l'année 1972. NULL si donnée non disponible.
+      - name: "1973"
+        description: Valeur de l'indicateur pour l'année 1973. NULL si donnée non disponible.
+      - name: "1974"
+        description: Valeur de l'indicateur pour l'année 1974. NULL si donnée non disponible.
+      - name: "1975"
+        description: Valeur de l'indicateur pour l'année 1975. NULL si donnée non disponible.
+      - name: "1976"
+        description: Valeur de l'indicateur pour l'année 1976. NULL si donnée non disponible.
+      - name: "1977"
+        description: Valeur de l'indicateur pour l'année 1977. NULL si donnée non disponible.
+      - name: "1978"
+        description: Valeur de l'indicateur pour l'année 1978. NULL si donnée non disponible.
+      - name: "1979"
+        description: Valeur de l'indicateur pour l'année 1979. NULL si donnée non disponible.
+      - name: "1980"
+        description: Valeur de l'indicateur pour l'année 1980. NULL si donnée non disponible.
+      - name: "1981"
+        description: Valeur de l'indicateur pour l'année 1981. NULL si donnée non disponible.
+      - name: "1982"
+        description: Valeur de l'indicateur pour l'année 1982. NULL si donnée non disponible.
+      - name: "1983"
+        description: Valeur de l'indicateur pour l'année 1983. NULL si donnée non disponible.
+      - name: "1984"
+        description: Valeur de l'indicateur pour l'année 1984. NULL si donnée non disponible.
+      - name: "1985"
+        description: Valeur de l'indicateur pour l'année 1985. NULL si donnée non disponible.
+      - name: "1986"
+        description: Valeur de l'indicateur pour l'année 1986. NULL si donnée non disponible.
+      - name: "1987"
+        description: Valeur de l'indicateur pour l'année 1987. NULL si donnée non disponible.
+      - name: "1988"
+        description: Valeur de l'indicateur pour l'année 1988. NULL si donnée non disponible.
+      - name: "1989"
+        description: Valeur de l'indicateur pour l'année 1989. NULL si donnée non disponible.
+      - name: "1990"
+        description: Valeur de l'indicateur pour l'année 1990. NULL si donnée non disponible.
+      - name: "1991"
+        description: Valeur de l'indicateur pour l'année 1991. NULL si donnée non disponible.
+      - name: "1992"
+        description: Valeur de l'indicateur pour l'année 1992. NULL si donnée non disponible.
+      - name: "1993"
+        description: Valeur de l'indicateur pour l'année 1993. NULL si donnée non disponible.
+      - name: "1994"
+        description: Valeur de l'indicateur pour l'année 1994. NULL si donnée non disponible.
+      - name: "1995"
+        description: Valeur de l'indicateur pour l'année 1995. NULL si donnée non disponible.
+      - name: "1996"
+        description: Valeur de l'indicateur pour l'année 1996. NULL si donnée non disponible.
+      - name: "1997"
+        description: Valeur de l'indicateur pour l'année 1997. NULL si donnée non disponible.
+      - name: "1998"
+        description: Valeur de l'indicateur pour l'année 1998. NULL si donnée non disponible.
+      - name: "1999"
+        description: Valeur de l'indicateur pour l'année 1999. NULL si donnée non disponible.
+      - name: "2000"
+        description: Valeur de l'indicateur pour l'année 2000. NULL si donnée non disponible.
+      - name: "2001"
+        description: Valeur de l'indicateur pour l'année 2001. NULL si donnée non disponible.
+      - name: "2002"
+        description: Valeur de l'indicateur pour l'année 2002. NULL si donnée non disponible.
+      - name: "2003"
+        description: Valeur de l'indicateur pour l'année 2003. NULL si donnée non disponible.
+      - name: "2004"
+        description: Valeur de l'indicateur pour l'année 2004. NULL si donnée non disponible.
+      - name: "2005"
+        description: Valeur de l'indicateur pour l'année 2005. NULL si donnée non disponible.
+      - name: "2006"
+        description: Valeur de l'indicateur pour l'année 2006. NULL si donnée non disponible.
+      - name: "2007"
+        description: Valeur de l'indicateur pour l'année 2007. NULL si donnée non disponible.
+      - name: "2008"
+        description: Valeur de l'indicateur pour l'année 2008. NULL si donnée non disponible.
+      - name: "2009"
+        description: Valeur de l'indicateur pour l'année 2009. NULL si donnée non disponible.
+      - name: "2010"
+        description: Valeur de l'indicateur pour l'année 2010. NULL si donnée non disponible.
+      - name: "2011"
+        description: Valeur de l'indicateur pour l'année 2011. NULL si donnée non disponible.
+      - name: "2012"
+        description: Valeur de l'indicateur pour l'année 2012. NULL si donnée non disponible.
+      - name: "2013"
+        description: Valeur de l'indicateur pour l'année 2013. NULL si donnée non disponible.
+      - name: "2014"
+        description: Valeur de l'indicateur pour l'année 2014. NULL si donnée non disponible.
+      - name: "2015"
+        description: Valeur de l'indicateur pour l'année 2015. NULL si donnée non disponible.
+      - name: "2016"
+        description: Valeur de l'indicateur pour l'année 2016. NULL si donnée non disponible.
+      - name: "2017"
+        description: Valeur de l'indicateur pour l'année 2017. NULL si donnée non disponible.
+      - name: "2018"
+        description: Valeur de l'indicateur pour l'année 2018. NULL si donnée non disponible.
+      - name: "2019"
+        description: Valeur de l'indicateur pour l'année 2019. NULL si donnée non disponible.
+      - name: "2020"
+        description: Valeur de l'indicateur pour l'année 2020. NULL si donnée non disponible.
+      - name: "2021"
+        description: Valeur de l'indicateur pour l'année 2021. NULL si donnée non disponible.
+      - name: "2022"
+        description: Valeur de l'indicateur pour l'année 2022. NULL si donnée non disponible.
+      - name: "2023"
+        description: Valeur de l'indicateur pour l'année 2023. NULL si donnée non disponible.
+      - name: "2024"
+        description: Valeur de l'indicateur pour l'année 2024. NULL si donnée non disponible.
+      - name: "2025"
+        description: Valeur de l'indicateur pour l'année 2025. NULL si donnée non disponible. Stockée en VARCHAR dans la source (artefact de conversion CSV→parquet).
+
+  - name: stg_matches
+    description: >
+      Fournir une table brute de tous les matchs sportifs disponibles, servant de
+      point d'entrée pour tous les traitements liés aux performances des équipes
+      et des pays. Une ligne par match unique.
+    columns:
+      - name: match_id
+        description: Identifiant unique du match (clé primaire).
+        tests:
+          - not_null
+          - unique
+
+      - name: match_date
+        description: Date du match au format date valide (YYYY-MM-DD).
+        tests:
+          - not_null
+
+      - name: kick_off
+        description: Heure de coup d'envoi du match. Optionnel, peut être NULL.
+
+      - name: home_score
+        description: Score de l'équipe domicile. Entier, valeur >= 0.
+        tests:
+          - not_null
+
+      - name: away_score
+        description: Score de l'équipe extérieure. Entier, valeur >= 0.
+        tests:
+          - not_null
+
+      - name: match_status
+        description: >
+          Statut du match (ex: available, collecting). Optionnel.
+
+      - name: match_status_360
+        description: Statut 360 du match. Optionnel.
+
+      - name: match_week
+        description: Journée de championnat. Optionnel.
+
+      - name: last_updated
+        description: Datetime de la dernière mise à jour du match. Optionnel.
+
+      - name: last_updated_360
+        description: Datetime de la dernière mise à jour des données 360. Optionnel.
+
+      - name: competition_id
+        description: Identifiant de la compétition.
+        tests:
+          - not_null
+
+      - name: competition_name
+        description: Nom de la compétition.
+        tests:
+          - not_null
+
+      - name: competition_country
+        description: Pays de la compétition. Optionnel.
+
+      - name: season_id
+        description: Identifiant de la saison.
+        tests:
+          - not_null
+
+      - name: season_name
+        description: Nom de la saison.
+        tests:
+          - not_null
+
+      - name: home_team_id
+        description: Identifiant de l'équipe domicile.
+        tests:
+          - not_null
+
+      - name: home_team_name
+        description: Nom de l'équipe domicile. Obligatoire, non vide.
+        tests:
+          - not_null
+
+      - name: home_team_gender
+        description: "Genre de l'équipe domicile (ex: male, female). Optionnel."
+
+      - name: home_team_country
+        description: Pays de l'équipe domicile. Optionnel.
+
+      - name: away_team_id
+        description: Identifiant de l'équipe extérieure.
+        tests:
+          - not_null
+
+      - name: away_team_name
+        description: Nom de l'équipe extérieure. Obligatoire, non vide.
+        tests:
+          - not_null
+
+      - name: away_team_gender
+        description: "Genre de l'équipe extérieure (ex: male, female). Optionnel."
+
+      - name: away_team_country
+        description: Pays de l'équipe extérieure. Optionnel.
+
+      - name: competition_stage_id
+        description: Identifiant de la phase de compétition. Optionnel.
+
+      - name: competition_stage_name
+        description: "Nom de la phase de compétition (ex: Group Stage, Final). Optionnel."
+
+      - name: stadium_id
+        description: Identifiant du stade. Optionnel.
+
+      - name: stadium_name
+        description: Nom du stade. Optionnel.
+
+      - name: stadium_country
+        description: Pays du stade. Optionnel.
+
+      - name: referee_id
+        description: Identifiant de l'arbitre. Optionnel.
+
+      - name: referee_name
+        description: Nom de l'arbitre. Optionnel.
+
+      - name: referee_country
+        description: Pays de l'arbitre. Optionnel.
+
+      - name: data_version
+        description: Version des données source. Optionnel.
