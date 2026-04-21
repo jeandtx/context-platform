@@ -136,26 +136,44 @@ models:
 
   - name: dim_team_country
     description: >
-      Table de correspondance entre équipes et pays permettant l'agrégation
-      des performances des équipes par pays. Le matching est effectué par
-      recherche textuelle du nom de pays dans le nom d'équipe (volontairement
-      fragile). Les équipes sans correspondance conservent country_name = NULL.
+      Table de correspondance entre équipes et pays pour permettre l'agrégation
+      des performances des équipes par pays. La résolution se fait en deux
+      étapes : jointure directe sur le code ISO2 (prioritaire), puis repli
+      textuel sur le nom de l'équipe. Les équipes sans correspondance sont
+      conservées avec country_name et iso2 à NULL.
     columns:
       - name: team_id
-        description: Identifiant de l'équipe, issu de dim_teams. Non unique — une équipe peut matcher plusieurs pays.
+        description: Identifiant unique de l'équipe, issu de dim_teams. Clé primaire de ce modèle.
         tests:
           - not_null
+          - unique
 
       - name: team_name
-        description: Nom complet de l'équipe sportive.
+        description: Nom de l'équipe sportive, issu de dim_teams.
         tests:
           - not_null
 
       - name: country_name
         description: >
-          Nom du pays correspondant à l'équipe, déterminé par matching textuel
-          (le nom du pays apparaît dans le nom de l'équipe). NULL si aucun pays
-          n'a pu être associé.
+          Nom complet du pays associé à l'équipe, issu de dim_countries.
+          NULL si aucune correspondance n'a pu être trouvée (ni ISO2 ni textuelle).
+
+      - name: iso2
+        description: >
+          Code pays ISO 3166-1 alpha-2 (2 lettres majuscules), issu de dim_countries.
+          NULL si aucune correspondance trouvée. Cohérent avec country_name :
+          les deux sont NULL ou les deux sont renseignés.
+
+      - name: match_method
+        description: >
+          Méthode utilisée pour résoudre la correspondance équipe-pays.
+          'iso2' = jointure directe via dim_teams.team_country = dim_countries.iso2 (prioritaire).
+          'text' = repli textuel via LIKE sur le nom de l'équipe.
+          NULL = aucune correspondance trouvée.
+        tests:
+          - accepted_values:
+              values: ['iso2', 'text']
+              quote: true
 
   - name: fact_country_performance
     description: >
