@@ -1,0 +1,173 @@
+version: 2
+
+models:
+  - name: dim_countries
+    description: |
+      Official reference table for countries.
+      Grain: One row per unique country
+    columns:
+      - name: country_name
+        description: Full country name
+        tests:
+          - not_null
+          - unique
+      - name: iso2
+        description: ISO 3166-1 alpha-2 country code (exactly 2 uppercase letters)
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_teams
+    description: |
+      Reference dimension for sports teams with characteristics (gender, country).
+      Grain: One row per unique team that has played a home match
+      Note: Teams that have never played at home are excluded from this dimension.
+    columns:
+      - name: team_id
+        description: Unique team identifier
+        tests:
+          - not_null
+          - unique
+      - name: team_name
+        description: Team name
+        tests:
+          - not_null
+      - name: team_gender
+        description: Gender of team (Male, Female, Mixed, or other values)
+        tests:
+          - not_null
+      - name: team_country
+        description: Country of team origin
+        tests:
+          - not_null
+
+  - name: dim_matches
+    description: |
+      Match dimension with teams, scores, and winner determination.
+      Grain: One row per unique match
+    columns:
+      - name: match_id
+        description: Unique match identifier
+        tests:
+          - not_null
+          - unique
+      - name: home_team
+        description: Home team name
+        tests:
+          - not_null
+      - name: away_team
+        description: Away team name
+        tests:
+          - not_null
+      - name: home_score
+        description: Home team score (≥ 0)
+        tests:
+          - not_null
+      - name: away_score
+        description: Away team score (≥ 0)
+        tests:
+          - not_null
+      - name: match_date
+        description: Date of match
+      - name: winner
+        description: Winner of match (team name or 'draw')
+        tests:
+          - not_null
+
+  - name: dim_population
+    description: |
+      Annual population by country (1960–2025) for comparing sports performance by population size.
+      Grain: One row per country + year combination
+      Transformed from wide format (columns per year) to long format (rows per year).
+      Filtered to SP.POP.TOTL indicator only (World Bank population indicator).
+    columns:
+      - name: country_name
+        description: Country name
+        tests:
+          - not_null
+      - name: country_code
+        description: Country code
+        tests:
+          - not_null
+      - name: indicator_name
+        description: Indicator name (should be "Population, total")
+        tests:
+          - not_null
+      - name: indicator_code
+        description: Indicator code (SP.POP.TOTL for population)
+        tests:
+          - not_null
+          - accepted_values:
+              values: [ "SP.POP.TOTL" ]
+      - name: year
+        description: Year of population measurement (1960–2025)
+        tests:
+          - not_null
+      - name: population_value
+        description: Total population (bigint, > 0)
+        tests:
+          - not_null
+
+  - name: dim_team_country
+    description: |
+      Linking table mapping teams to countries for team-to-country aggregation.
+      Grain: One row per team-country pair
+      Note: Uses text matching (team name contains country name). Fragile by design.
+            Teams without matching country get NULL country_name.
+            A team may match multiple countries if its name contains multiple country names.
+    columns:
+      - name: team_id
+        description: Team identifier
+        tests:
+          - not_null
+      - name: team_name
+        description: Team name
+        tests:
+          - not_null
+      - name: country_name
+        description: Country name (NULL if text matching failed)
+
+  - name: fact_country_performance
+    description: |
+      Aggregated country sports performance measuring matches played and victories.
+      Grain: One row per country
+      Note: Only home matches are counted.
+    columns:
+      - name: country_name
+        description: Country name
+        tests:
+          - not_null
+          - unique
+      - name: matches_played
+        description: Number of home matches played (≥ 0)
+        tests:
+          - not_null
+      - name: wins
+        description: Number of home match victories (≥ 0, ≤ matches_played)
+        tests:
+          - not_null
+
+  - name: kpi_performance_vs_population
+    description: |
+      KPI measuring sports performance ratio relative to population (wins ÷ population).
+      Grain: One row per country
+      Calculates performance ratio (wins / population) for equitable comparison across countries.
+      Uses 2023 population (most recent complete year).
+    columns:
+      - name: country_name
+        description: Country name
+        tests:
+          - not_null
+          - unique
+      - name: wins
+        description: Number of wins
+        tests:
+          - not_null
+      - name: population_value
+        description: Population value (> 0 to prevent division by zero)
+        tests:
+          - not_null
+      - name: performance_ratio
+        description: Performance ratio (wins / population)
+        tests:
+          - not_null

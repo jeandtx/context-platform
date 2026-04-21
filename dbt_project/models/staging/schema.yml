@@ -1,0 +1,95 @@
+version: 2
+
+models:
+  - name: stg_country_codes
+    description: |
+      Staging view providing country reference data with simple renaming.
+      Source: dbt_project/data/country_codes.parquet
+    columns:
+      - name: country_name
+        description: Full country name
+        tests:
+          - not_null
+          - unique
+      - name: code
+        description: ISO 3166-1 alpha-2 country code (2 uppercase letters)
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_matches
+    description: |
+      Staging view providing all sports matches in raw form.
+      Source: dbt_project/data/matches.parquet
+      Grain: One row per unique match
+    columns:
+      - name: match_id
+        description: Unique match identifier
+        tests:
+          - not_null
+          - unique
+      - name: match_date
+        description: Date of the match
+        tests:
+          - not_null
+      - name: kick_off
+        description: Kick-off time (optional)
+      - name: home_score
+        description: Home team score
+        tests:
+          - not_null
+      - name: away_score
+        description: Away team score
+        tests:
+          - not_null
+      - name: home_team_id
+        description: Home team identifier
+        tests:
+          - not_null
+      - name: home_team_name
+        description: Home team name
+        tests:
+          - not_null
+      - name: home_team_gender
+        description: Gender of home team (e.g., male, female)
+      - name: home_team_country
+        description: Country of home team
+      - name: away_team_id
+        description: Away team identifier
+        tests:
+          - not_null
+      - name: away_team_name
+        description: Away team name
+        tests:
+          - not_null
+      - name: away_team_gender
+        description: Gender of away team
+      - name: away_team_country
+        description: Country of away team
+      - name: competition_id
+        description: Competition identifier
+        tests:
+          - not_null
+      - name: competition_name
+        description: Competition name
+        tests:
+          - not_null
+      - name: season_id
+        description: Season identifier
+        tests:
+          - not_null
+      - name: season_name
+        description: Season name
+
+  - name: stg_events
+    description: |
+      Staging view providing all sports events (actions/situations) during matches.
+      Source: dbt_project/data/events.parquet
+      Grain: One row per unique event within a match
+
+  - name: stg_indicators
+    description: |
+      Staging view providing World Bank indicators in wide format (one column per year).
+      Source: dbt_project/data/indicators.parquet
+      Grain: One row per country/indicator combination
+      Note: Contains multiple indicator types (population, GDP, etc.). Filtering to SP.POP.TOTL happens downstream in dim_population.
