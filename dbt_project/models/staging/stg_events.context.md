@@ -37,12 +37,31 @@
 | Localisation Y          | Numérique | `location_y`           | Optionnel, système de coordonnées à clarifier                     |
 | ID équipe en possession | Entier    | `possession_team_id`   | Optionnel, peut être NULL                                         |
 | Équipe en possession    | Texte     | `possession_team_name` | Optionnel, contexte du jeu                                        |
+| ID motif de jeu         | Entier    | `play_pattern_id`      | Optionnel, identifiant numérique du motif de jeu                  |
 | Motif de jeu            | Texte     | `play_pattern_name`    | Optionnel (ex: Regular Play, Throw In, Corner Kick, etc.)         |
-| Tactics                 | Texte     | `tactics`              | Optionnel, structure à clarifier (JSON, texte libre, structured)  |
+| Durée de l'événement    | Numérique | `duration`             | Optionnel, durée en secondes de l'action                          |
+| Séquence de possession  | Entier    | `possession`           | Optionnel, numéro de séquence de possession dans le match         |
 | Sous pression           | Booléen   | `under_pressure`       | Optionnel, NULL possible                                          |
 | Hors caméra             | Booléen   | `off_camera`           | Optionnel, NULL possible                                          |
 | Hors jeu                | Booléen   | `out`                  | Optionnel, NULL possible                                          |
 | Counter-press           | Booléen   | `counterpress`         | Optionnel, NULL possible                                          |
+| Détails passe           | Struct    | `pass`                 | Optionnel, NULL si l'événement n'est pas une passe                |
+| Détails tir             | Struct    | `shot`                 | Optionnel, NULL si l'événement n'est pas un tir                   |
+| Détails conduite        | Struct    | `carry`                | Optionnel, NULL si l'événement n'est pas une conduite de balle    |
+| Détails dribble         | Struct    | `dribble`              | Optionnel, NULL si l'événement n'est pas un dribble               |
+| Détails duel            | Struct    | `duel`                 | Optionnel, NULL si l'événement n'est pas un duel                  |
+| Détails dégagement      | Struct    | `clearance`            | Optionnel, NULL si l'événement n'est pas un dégagement            |
+| Détails blocage         | Struct    | `block`                | Optionnel, NULL si l'événement n'est pas un blocage               |
+| Détails interception    | Struct    | `interception`         | Optionnel, NULL si l'événement n'est pas une interception         |
+| Détails gardien         | Struct    | `goalkeeper`           | Optionnel, NULL si l'événement n'implique pas le gardien          |
+| Détails faute commise   | Struct    | `foul_committed`       | Optionnel, NULL si l'événement n'est pas une faute commise        |
+| Détails faute obtenue   | Struct    | `foul_won`             | Optionnel, NULL si l'événement n'est pas une faute obtenue        |
+| Détails mauvais comport.| Struct    | `bad_behaviour`        | Optionnel, NULL si l'événement n'est pas un carton                |
+| Détails réception balle | Struct    | `ball_receipt`         | Optionnel, NULL si l'événement n'est pas une réception de balle   |
+| Détails récupération    | Struct    | `ball_recovery`        | Optionnel, NULL si l'événement n'est pas une récupération         |
+| Détails mauvais contrôle| Struct    | `miscontrol`           | Optionnel, NULL si l'événement n'est pas un mauvais contrôle      |
+| Détails substitution    | Struct    | `substitution`         | Optionnel, NULL si l'événement n'est pas une substitution         |
+| Tactics                 | Struct    | `tactics`              | Optionnel, structure à clarifier (JSON, texte libre, structured)  |
 
 ## Tests de logique métier
 

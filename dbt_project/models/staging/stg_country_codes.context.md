@@ -16,10 +16,10 @@
 
 ## Champs attendus
 
-| Champ       | Format | Nomenclature   | Règles/Tests                                                  |
-| ----------- | ------ | -------------- | ------------------------------------------------------------- |
-| Nom du pays | Texte  | `country_name` | Obligatoire, non vide, issu de la source brute                |
-| Code ISO    | Texte  | `code`         | Obligatoire, format ISO 3166-1 alpha-2 (2 lettres majuscules) |
+| Champ       | Format | Nomenclature | Règles/Tests                                                  |
+| ----------- | ------ | ------------ | ------------------------------------------------------------- |
+| Nom du pays | Texte  | `name`       | Obligatoire, non vide, issu de la source brute                |
+| Code ISO    | Texte  | `code`       | Obligatoire, format ISO 3166-1 alpha-2 (2 lettres majuscules) |
 
 ## Tests de logique métier
 

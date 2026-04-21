@@ -7,7 +7,7 @@
 
 ## Transformations
 
-- **Source** : Données depuis `stg_matches` et `dim_team_country` (liaison équipe-pays).
+- **Source** : Données depuis `dim_matches` et `dim_team_country` (liaison équipe-pays).
 - **Transformation** :
     - **Comptage des matchs joués** : Nombre de matchs où une équipe du pays était en domicile.
     - **Comptage des victoires** : Nombre de matchs domicile terminés avec victoire (winner = nom de l'équipe, à vérifier).

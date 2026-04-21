@@ -16,17 +16,40 @@
 
 ## Champs attendus
 
-| Champ                  | Format | Nomenclature     | Règles/Tests                        |
-| ---------------------- | ------ | ---------------- | ----------------------------------- |
-| ID du match            | Entier | `match_id`       | Obligatoire, unique, clé primaire   |
-| Équipe domicile (nom)  | Texte  | `home_team_name` | Obligatoire, non vide               |
-| Équipe extérieur (nom) | Texte  | `away_team_name` | Obligatoire, non vide               |
-| Score domicile         | Entier | `home_score`     | Obligatoire, valeur ≥ 0             |
-| Score extérieur        | Entier | `away_score`     | Obligatoire, valeur ≥ 0             |
-| Date du match          | Date   | `match_date`     | Obligatoire, format date valide     |
-| Lieu/Stade             | Texte  | `venue`          | Optionnel, peut être NULL           |
-| Arbitre                | Texte  | `referee`        | Optionnel, peut être NULL           |
-| Compétition            | Texte  | `competition`    | Optionnel, contexte de la rencontre |
+| Champ                           | Format   | Nomenclature            | Règles/Tests                              |
+| ------------------------------- | -------- | ----------------------- | ----------------------------------------- |
+| ID du match                     | Entier   | `match_id`              | Obligatoire, unique, clé primaire         |
+| Date du match                   | Date     | `match_date`            | Obligatoire, format date valide           |
+| Heure de coup d'envoi           | Texte    | `kick_off`              | Optionnel, peut être NULL                 |
+| Score domicile                  | Entier   | `home_score`            | Obligatoire, valeur ≥ 0                   |
+| Score extérieur                 | Entier   | `away_score`            | Obligatoire, valeur ≥ 0                   |
+| Statut du match                 | Texte    | `match_status`          | Optionnel (ex: available, collecting)     |
+| Statut 360 du match             | Texte    | `match_status_360`      | Optionnel                                 |
+| Journée de championnat          | Entier   | `match_week`            | Optionnel                                 |
+| Dernière mise à jour            | Datetime | `last_updated`          | Optionnel                                 |
+| Dernière mise à jour 360        | Datetime | `last_updated_360`      | Optionnel                                 |
+| ID compétition                  | Entier   | `competition_id`        | Obligatoire                               |
+| Nom compétition                 | Texte    | `competition_name`      | Obligatoire                               |
+| Pays compétition                | Texte    | `competition_country`   | Optionnel                                 |
+| ID saison                       | Entier   | `season_id`             | Obligatoire                               |
+| Nom saison                      | Texte    | `season_name`           | Obligatoire                               |
+| ID équipe domicile              | Entier   | `home_team_id`          | Obligatoire                               |
+| Équipe domicile (nom)           | Texte    | `home_team_name`        | Obligatoire, non vide                     |
+| Genre équipe domicile           | Texte    | `home_team_gender`      | Optionnel (ex: male, female)              |
+| Pays équipe domicile            | Texte    | `home_team_country`     | Optionnel                                 |
+| ID équipe extérieure            | Entier   | `away_team_id`          | Obligatoire                               |
+| Équipe extérieure (nom)         | Texte    | `away_team_name`        | Obligatoire, non vide                     |
+| Genre équipe extérieure         | Texte    | `away_team_gender`      | Optionnel (ex: male, female)              |
+| Pays équipe extérieure          | Texte    | `away_team_country`     | Optionnel                                 |
+| ID phase de compétition         | Entier   | `competition_stage_id`  | Optionnel                                 |
+| Nom phase de compétition        | Texte    | `competition_stage_name`| Optionnel (ex: Group Stage, Final)        |
+| ID stade                        | Entier   | `stadium_id`            | Optionnel                                 |
+| Nom stade                       | Texte    | `stadium_name`          | Optionnel                                 |
+| Pays stade                      | Texte    | `stadium_country`       | Optionnel                                 |
+| ID arbitre                      | Entier   | `referee_id`            | Optionnel                                 |
+| Nom arbitre                     | Texte    | `referee_name`          | Optionnel                                 |
+| Pays arbitre                    | Texte    | `referee_country`       | Optionnel                                 |
+| Version des données             | Texte    | `data_version`          | Optionnel                                 |
 
 ## Tests de logique métier
 

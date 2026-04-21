@@ -9,18 +9,17 @@
 
 - **Source** : Données depuis `dim_teams` avec noms d'équipes et la référence pays.
 - **Transformation** :
-    - **Correspondance textuelle** : Veérification si le nom du pays apparaît dans le nom de l'équipe (matching de texte).
+    - **Correspondance textuelle** : Vérification si le nom du pays apparaît dans le nom de l'équipe (matching de texte).
     - La correspondance est volontairement fragile (par construction, notée dans le code source).
-    - Conservation de l'ID d'équipe, nom d'équipe et nom du pays.
-- **Exclusions** : Les équipes dont le nom ne contient pas le nom d'un pays seront perdues.
+    - Conservation du nom d'équipe et du nom du pays.
+- **Exclusions** : Les équipes dont le nom ne contient pas le nom d'un pays retourneront un `country_name` NULL (LEFT JOIN).
 
 ## Champs attendus
 
-| Champ      | Format | Nomenclature   | Règles/Tests                                |
-| ---------- | ------ | -------------- | ------------------------------------------- |
-| ID équipe  | Entier | `team_id`      | Obligatoire, clé étrangère vers `dim_teams` |
-| Nom équipe | Texte  | `team_name`    | Obligatoire, non vide                       |
-| Nom pays   | Texte  | `country_name` | Obligatoire, trouvé par matching textuel    |
+| Champ      | Format | Nomenclature   | Règles/Tests                             |
+| ---------- | ------ | -------------- | ---------------------------------------- |
+| Nom équipe | Texte  | `team_name`    | Obligatoire, non vide                    |
+| Nom pays   | Texte  | `country_name` | Optionnel, NULL si matching échoué       |
 
 ## Tests de logique métier
 
@@ -28,13 +27,12 @@
     - Chaque équipe doit être associée à un seul pays (unicité sur `team_id`).
     - Aucune ligne vide ou doublon autorisé.
 2. **Validation des données** :
-    - `team_id`, `team_name`, `country_name` doivent être NOT NULL.
-    - Chaque `team_id` doit correspondre à une équipe existante dans `dim_teams`.
-    - Le pays doit pouvoir être trouvé dans `dim_countries` (verification recommandée en aval).
+    - `team_name` doit être NOT NULL.
+    - Le pays doit pouvoir être trouvé dans `dim_countries` (vérification recommandée en aval).
 3. **Tests unitaires suggérés** :
-    - Vérifier que le matching textuel est validé: "France Women" doit correspondre à "France".
-    - Identifier les équipes de `dim_teams` qui ne sont PAS présentes ici (matching échoué).
-    - Vérifier l'absence de doublons sur `team_id`.
+    - Vérifier que le matching textuel est validé : "France Women" doit correspondre à "France".
+    - Identifier les équipes de `dim_teams` qui ne sont PAS présentes ici (matching échoué → `country_name` NULL).
+    - Vérifier l'absence de doublons sur `team_name`.
 
 ## Notes
 

@@ -30,7 +30,6 @@
 | Score extérieur  | Entier | `away_score` | Obligatoire, valeur ≥ 0                                    |
 | Vainqueur        | Texte  | `winner`     | Obligatoire, valeur = nom d'équipe ou "draw" (jamais NULL) |
 | Date du match    | Date   | `match_date` | Optionnel, peut être NULL                                  |
-| Stade/Lieu       | Texte  | `venue`      | Optionnel, peut être NULL                                  |
 
 ## Tests de logique métier
 
