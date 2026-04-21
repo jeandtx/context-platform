@@ -42,13 +42,15 @@ uv sync
 ```bash
 cd dbt_project
 export DBT_PROFILES_DIR=../.dbt
-dbt run      # Construire tous les modèles
-dbt test     # Exécuter les tests de qualité des données
+dbt debug
 ```
+
+Vérifie qu'aucun fichier duckdb n'a été créé sinon c'est qu'il y a un problème de configuration du profil dbt.
 
 ### 4. Démarrer Evidence.dev
 
 ```bash
+npm --prefix ./reports run sources
 npm --prefix ./reports run dev
 ```
 

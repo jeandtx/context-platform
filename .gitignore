@@ -16,7 +16,6 @@ dbt_project/target/
 dbt_project/logs/
 dbt_project/data/
 dbt_packages/
-.dbt/
 .vscode/
 logs/
 .DS_Store

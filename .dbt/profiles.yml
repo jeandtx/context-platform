@@ -3,7 +3,7 @@ dbt_poc:
   outputs:
     dev:
       type: duckdb
-      path: "dbt.duckdb"
+      path: "../dbt.duckdb"
       schema: "main"
       threads: 4
       timeout_seconds: 300
