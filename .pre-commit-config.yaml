@@ -1,0 +1,75 @@
+# Pre-commit hooks configuration
+# Install: pre-commit install
+# Update: pre-commit autoupdate
+# Run manually: pre-commit run --all-files
+
+repos:
+  # Python formatting & linting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.5
+    hooks:
+      - id: ruff
+        args: [--fix]
+        exclude: ^dbt_project/target/
+      - id: ruff-format
+        exclude: ^dbt_project/target/
+
+  # YAML linting
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: yaml-unsafe
+        exclude: ^dbt_project/target/
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # SQL linting
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.0.7
+    hooks:
+      - id: sqlfluff-lint
+        args: [--dialect, duckdb]
+        exclude: ^dbt_project/target/
+      - id: sqlfluff-fix
+        args: [--dialect, duckdb]
+        exclude: ^dbt_project/target/
+
+  # dbt linting & parsing
+  - repo: https://github.com/dbt-labs/dbt-core
+    rev: 1.8.0
+    hooks:
+      - id: dbt-parse
+        files: ^dbt_project/
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  # Git attributes
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        types_or: [markdown, yaml, json]
+        exclude: ^dbt_project/target/
+
+  # Security checks
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: [--baseline, .secrets.baseline]
+        exclude: ^(uv\.lock|dbt\.duckdb)
+
+ci:
+  autofix_commit_msg: "🔧 pre-commit auto-fixes"
+  autofix_prs: true
+  autoupdate_branch: ""
+  autoupdate_commit_msg: "⬆️ pre-commit autoupdate"
+  autoupdate_schedule: weekly
+  skip: [dbt-parse]  # dbt-parse needs setup
+  stages: [commit]

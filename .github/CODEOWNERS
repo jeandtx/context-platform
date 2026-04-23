@@ -1,0 +1,16 @@
+# CODEOWNERS file to specify who should review PRs
+
+# All files
+* @jeandtx
+
+# dbt models
+dbt_project/models/ @jeandtx
+
+# Tests
+tests/ @jeandtx
+dbt_project/tests/ @jeandtx
+
+# Configuration
+.pre-commit-config.yaml @jeandtx
+pyproject.toml @jeandtx
+Makefile @jeandtx
