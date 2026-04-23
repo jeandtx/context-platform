@@ -1,0 +1,13 @@
+{
+  "file_path": "/tmp/tmp9ei2rltm/fct_orders.context.md",
+  "decision": "needs_revision",
+  "reviewer": "reviewer@example.com",
+  "timestamp": "2026-04-23T16:18:34.572813",
+  "comments": [],
+  "approved_sections": [],
+  "rejected_sections": [],
+  "revision_requests": [
+    "Add Objectifs section",
+    "Complete Transformations documentation"
+  ]
+}

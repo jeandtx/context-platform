@@ -135,7 +135,11 @@ class HumanReviewQueue:
 
         # Append to queue
         with open(self.queue_file, "a") as f:
-            f.write(json.dumps(asdict(item)) + "\n")
+            item_dict = asdict(item)
+            # Convert enums to strings for JSON serialization
+            item_dict["status"] = item_dict["status"].value
+            item_dict["priority"] = item_dict["priority"].value
+            f.write(json.dumps(item_dict) + "\n")
 
         logger.info(
             f"Added to review queue: {model_name} (priority: {priority.value})"
@@ -269,7 +273,10 @@ class HumanReviewQueue:
                     / f"{item.model_name}_{datetime.now().timestamp()}.json"
                 )
                 with open(review_file, "w") as f:
-                    json.dump(asdict(review), f, indent=2, default=str)
+                    review_dict = asdict(review)
+                    # Convert enums to strings
+                    review_dict["decision"] = review_dict["decision"].value
+                    json.dump(review_dict, f, indent=2, default=str)
 
                 logger.info(f"Review submitted for {model_name}: {decision.value}")
                 break
@@ -281,7 +288,11 @@ class HumanReviewQueue:
         """Save queue back to file."""
         with open(self.queue_file, "w") as f:
             for item in items:
-                f.write(json.dumps(asdict(item), default=str) + "\n")
+                item_dict = asdict(item)
+                # Convert enums to strings for JSON serialization
+                item_dict["status"] = item_dict["status"].value
+                item_dict["priority"] = item_dict["priority"].value
+                f.write(json.dumps(item_dict, default=str) + "\n")
 
     def get_statistics(self) -> dict:
         """Get queue statistics."""
