@@ -1,0 +1,11 @@
+# dim_population.sql uses DuckDB UNPIVOT syntax which sqlfluff cannot parse,
+# causing templating errors that block all rule checks.
+# The special-char column aliases ("Country Name", "1960", etc.) are also
+# structurally unavoidable as they originate from the World Bank source schema.
+dbt_project/models/marts/dim_population.sql
+
+# Snapshot files use dbt-specific {% snapshot %}...{% endsnapshot %} Jinja tags
+# which are unknown to sqlfluff's standard jinja templater (would need the dbt
+# templater + dbt installed in the pre-commit env). The SQL inside snapshots
+# mirrors the already-linted mart models, so excluding is safe.
+dbt_project/snapshots

@@ -34,7 +34,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [ "male", "female" ]
+              values: ["male", "female"]
       - name: team_country
         description: Country of the team
         tests:

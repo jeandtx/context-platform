@@ -10,3 +10,58 @@ dependencies = [
     "dbt-duckdb>=1.8.0",
     "evidence>=0.3.0",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.3.5",
+    "sqlfluff>=3.0.7",
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+exclude = [
+    ".git",
+    ".venv",
+    "target",
+    "dbt_project/target",
+    "dbt_packages",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
+    "C4",
+    "UP",
+    "ARG",
+    "SIM",
+    "RUF",
+]
+ignore = ["E501", "B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=. --cov-report=html --cov-report=term-missing"
+python_files = "test_*.py"
+
+[tool.coverage.run]
+omit = [
+    "dbt_project/target/*",
+    "dbt_project/logs/*",
+    ".venv/*",
+]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "prek>=0.3.10",
+]

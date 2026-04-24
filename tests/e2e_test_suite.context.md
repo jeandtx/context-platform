@@ -9,15 +9,15 @@
 
 - **Source** : Infrastructure de test dbt complète (tests `.sql` dans `tests/`) combinée avec validations métier manuelles et assertions de couches.
 - **Transformation** :
-    - Orchestration de tests unitaires isolés par modèle (uniqueness, not_null, relationships, custom tests).
-    - Enchaînement de tests de flux (tests de jointure multi-modèles, propagation des données, comportement attendu après transformations en cascade).
-    - Validation des invariants métier (ex: `wins ≤ matches_played`, ratio de performance vérifié end-to-end).
-    - Détection de régressions : comparaison avec baselines de données attendues.
-    - Vérification des performances et du linting dbt.
+  - Orchestration de tests unitaires isolés par modèle (uniqueness, not_null, relationships, custom tests).
+  - Enchaînement de tests de flux (tests de jointure multi-modèles, propagation des données, comportement attendu après transformations en cascade).
+  - Validation des invariants métier (ex: `wins ≤ matches_played`, ratio de performance vérifié end-to-end).
+  - Détection de régressions : comparaison avec baselines de données attendues.
+  - Vérification des performances et du linting dbt.
 - **Exclusions** :
-    - Les tests de configuration intrinsèquement liés à un modèle (uniqueness, not_null) sont documentés dans chaque fichier `.context.md`.
-    - Les tests d'infrastructure (déploiement, permission, réseau) ne font pas partie de cette suite.
-    - Les tests unitaires de logique métier simple sont exclus (ex: test d'un renommage trivial).
+  - Les tests de configuration intrinsèquement liés à un modèle (uniqueness, not_null) sont documentés dans chaque fichier `.context.md`.
+  - Les tests d'infrastructure (déploiement, permission, réseau) ne font pas partie de cette suite.
+  - Les tests unitaires de logique métier simple sont exclus (ex: test d'un renommage trivial).
 
 ## Champs attendus
 
@@ -37,7 +37,7 @@
 
 - **Suite de tests atomiques** : Chaque modèle dbt possède des tests isolés (uniqueness, not_null) documentés dans son `.context.md`.
 - **Tests de flux** : S'assurer que chaque flux métier complet (raw → stg → mart → KPI) produit le grain attendu sans perte ni duplication de données.
-    - Exemple : `stg_matches` (1 ligne/match unique) → `dim_matches` (1 ligne/match enrichi) → `fact_country_performance` (1 ligne/pays).
+  - Exemple : `stg_matches` (1 ligne/match unique) → `dim_matches` (1 ligne/match enrichi) → `fact_country_performance` (1 ligne/pays).
 - **Absence de lignes orphelines** : Aucune ligne vide, NULL malveillant ou doublon en aval.
 
 ### 2. Validation des données
@@ -133,18 +133,20 @@ Comparer la distribution des données actuelles à une baseline connue :
 ## Notes
 
 - **Incertitudes** :
-    - **Baseline de régression inconnue** : Pas de snapshot de données attendues documenté. À générer après validation initiale.
-    - **Seuils de performance non définis** : À établir après premières exécutions en production.
-    - **Couverture de tests incompète potentiellement** : Certains flux métier complexes (ex: jointures multi-niveaux) peuvent ne pas être couverts par les tests actuels.
-    - **Fragilité des tests de correspondance textuelle** : Les tests validant la correspondance équipe-pays (via `dim_team_country`) reposent sur matching textuel fragile. Risque de faux négatifs (équipes orphelines non détectées).
-    - **Dépendances implicites entre modèles** : Certains modèles peuvent avoir des dépendances implicites non documentées (ex: ordre d'exécution de `dbt run` attendu). À clarifier.
-    - **Validation manuelle requise** : Les tests automatisés ne peuvent valider que les contraintes formelles. Les règles métier nuancées (ex: "Les scores représentent le temps réglementaire") requièrent une validation manuelle.
+
+  - **Baseline de régression inconnue** : Pas de snapshot de données attendues documenté. À générer après validation initiale.
+  - **Seuils de performance non définis** : À établir après premières exécutions en production.
+  - **Couverture de tests incompète potentiellement** : Certains flux métier complexes (ex: jointures multi-niveaux) peuvent ne pas être couverts par les tests actuels.
+  - **Fragilité des tests de correspondance textuelle** : Les tests validant la correspondance équipe-pays (via `dim_team_country`) reposent sur matching textuel fragile. Risque de faux négatifs (équipes orphelines non détectées).
+  - **Dépendances implicites entre modèles** : Certains modèles peuvent avoir des dépendances implicites non documentées (ex: ordre d'exécution de `dbt run` attendu). À clarifier.
+  - **Validation manuelle requise** : Les tests automatisés ne peuvent valider que les contraintes formelles. Les règles métier nuancées (ex: "Les scores représentent le temps réglementaire") requièrent une validation manuelle.
 
 - **Directives de mise à jour** :
-    - Lorsqu'un nouveau modèle est ajouté, ajouter des tests "Relationships" et "Invariants" correspondants.
-    - Lorsqu'une transformation métier change, mettre à jour les tests "Flows" et considérer une nouvelle baseline "Regressions".
-    - Maintenir cette suite à jour avec les changements métier : exécuter avant chaque commit/PR.
-    - Documenter les anomalies acceptées (ex: absence intentionnelle de certaines équipes).
+
+  - Lorsqu'un nouveau modèle est ajouté, ajouter des tests "Relationships" et "Invariants" correspondants.
+  - Lorsqu'une transformation métier change, mettre à jour les tests "Flows" et considérer une nouvelle baseline "Regressions".
+  - Maintenir cette suite à jour avec les changements métier : exécuter avant chaque commit/PR.
+  - Documenter les anomalies acceptées (ex: absence intentionnelle de certaines équipes).
 
 - **Validation** : À compléter par [Nom du responsable Tests] et [Date de certification].
 

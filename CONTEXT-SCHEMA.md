@@ -32,7 +32,7 @@ Définit clairement la raison d'être du modèle et son grain de détail.
 
 - La **Finalité** doit être concise (1-2 phrases max).
 - Le **Grain** doit expliciter l'entité métier représentée par chaque ligne.
-    - Exemples : "Une ligne par match unique", "Une ligne par combinaison **pays + année**", "Une ligne par équipe unique"
+  - Exemples : "Une ligne par match unique", "Une ligne par combinaison **pays + année**", "Une ligne par équipe unique"
 
 **Exemples** :
 
@@ -53,9 +53,9 @@ Décrit la provenance des données, la logique métier appliquée et les exclusi
 
 - **Source** : [Description de la/des table(s) source(s)]
 - **Transformation** :
-    - [Transformation 1]
-    - [Transformation 2]
-    - [Transformation n]
+  - [Transformation 1]
+  - [Transformation 2]
+  - [Transformation n]
 - **Exclusions** : [Données filtrées ou exclues, ou "Aucune exclusion"]
 ```
 
@@ -63,8 +63,8 @@ Décrit la provenance des données, la logique métier appliquée et les exclusi
 
 - **Source** : Nommer la ou les table(s) source(s) d'où proviennent les données.
 - **Transformation** : Lister les opérations métier appliquées (renommages, calculs, filtres, pivots, agrégations).
-    - Pour les modèles bruts (staging), l'absence de transformation doit être explicite : "Aucune transformation majeure n'est effectuée à ce stade. Les données sont recopiées telles quelles."
-    - Pour les modèles transformés, détailler chaque transformation de manière précise.
+  - Pour les modèles bruts (staging), l'absence de transformation doit être explicite : "Aucune transformation majeure n'est effectuée à ce stade. Les données sont recopiées telles quelles."
+  - Pour les modèles transformés, détailler chaque transformation de manière précise.
 - **Exclusions** : Expliciter les données filtrées ou exclues (ex: NULL, zéros, doublons).
 
 **Exemples** :
@@ -76,8 +76,8 @@ Décrit la provenance des données, la logique métier appliquée et les exclusi
 
 - **Source** : Fichier de référence externe contenant les noms de pays et leurs codes ISO.
 - **Transformation** :
-    - Aucune transformation majeure n'est effectuée.
-    - Renommage simple : `Name` → `country_name`, `Code` → `code`.
+  - Aucune transformation majeure n'est effectuée.
+  - Renommage simple : `Name` → `country_name`, `Code` → `code`.
 - **Exclusions** : Aucune exclusion, toutes les lignes sources sont conservées.
 ```
 
@@ -88,9 +88,9 @@ Décrit la provenance des données, la logique métier appliquée et les exclusi
 
 - **Source** : Données depuis `stg_matches` et `dim_team_country` (liaison équipe-pays).
 - **Transformation** :
-    - **Comptage des matchs joués** : Nombre de matchs où une équipe du pays était en domicile.
-    - **Comptage des victoires** : Nombre de matchs domicile terminés avec victoire.
-    - Agrégation par pays.
+  - **Comptage des matchs joués** : Nombre de matchs où une équipe du pays était en domicile.
+  - **Comptage des victoires** : Nombre de matchs domicile terminés avec victoire.
+  - Agrégation par pays.
 - **Exclusions** : Seuls les matchs à domicile sont comptabilisés. Les matchs en déplacement sont ignorés.
 ```
 
@@ -121,13 +121,13 @@ Tableau détaillé de toutes les colonnes du modèle avec leurs caractéristique
 
 1. **Champ** : Nom lisible, en français, décrivant le type de données.
 2. **Format** : Type de données SQL standardisé. Ajouter des précisions si nécessaire.
-    - `Texte`, `Entier`, `Bigint`, `Décimal`, `Date (YYYY-MM-DD)`, `DateTime`, `Booléen`, `JSON`, `Array`, etc.
+   - `Texte`, `Entier`, `Bigint`, `Décimal`, `Date (YYYY-MM-DD)`, `DateTime`, `Booléen`, `JSON`, `Array`, etc.
 3. **Nomenclature** : `snake_case` exact, entre backticks (` \`nom_colonne\` `).
 4. **Règles/Tests** : Combiner les règles pertinentes :
-    - Nullabilité : `Obligatoire` / `Optionnel`, `NULL possible`
-    - Validations : `non vide`, `unique`, `valeur ≥ 0`, `doit être l'une de { valeur1, valeur2 }`
-    - Provenance : `issu de ...`, `refère ...`
-    - Restrictions logiques : `≤ [autre_champ]`
+   - Nullabilité : `Obligatoire` / `Optionnel`, `NULL possible`
+   - Validations : `non vide`, `unique`, `valeur ≥ 0`, `doit être l'une de { valeur1, valeur2 }`
+   - Provenance : `issu de ...`, `refère ...`
+   - Restrictions logiques : `≤ [autre_champ]`
 
 **Exemple concis** :
 
@@ -147,18 +147,20 @@ Décrit les tests de validation pour garantir l'intégrité des données.
 ## Tests de logique métier
 
 1. **Vérification du grain** :
-    - [Assertion sur l'unicité et l'absence de doublons]
-    - [Assertions sur la structure attendue]
+
+   - [Assertion sur l'unicité et l'absence de doublons]
+   - [Assertions sur la structure attendue]
 
 2. **Validation des données** :
-    - [Contraintes NOT NULL]
-    - [Contraintes de format ou de valeur]
-    - [Contraintes logiques inter-champs]
+
+   - [Contraintes NOT NULL]
+   - [Contraintes de format ou de valeur]
+   - [Contraintes logiques inter-champs]
 
 3. **Tests unitaires suggérés** :
-    - [Test spécifique 1]
-    - [Test spécifique 2]
-    - [Test spécifique n]
+   - [Test spécifique 1]
+   - [Test spécifique 2]
+   - [Test spécifique n]
 ```
 
 **Trois niveaux de tests** :
@@ -173,8 +175,8 @@ Décrit les tests de validation pour garantir l'intégrité des données.
 
 ```markdown
 1. **Vérification du grain** :
-    - Chaque pays doit apparaître une seule fois (unicité sur `country_name` et `code`).
-    - Aucune ligne vide ou doublon autorisé.
+   - Chaque pays doit apparaître une seule fois (unicité sur `country_name` et `code`).
+   - Aucune ligne vide ou doublon autorisé.
 ```
 
 #### 1.2 Validation des données
@@ -187,9 +189,9 @@ Décrit les tests de validation pour garantir l'intégrité des données.
 
 ```markdown
 2. **Validation des données** :
-    - `match_id`, `home_team`, `away_team`, `home_score`, `away_score`, `winner` doivent être NOT NULL.
-    - La valeur du champ `winner` doit être soit le nom d'une équipe (home_team ou away_team), soit "draw".
-    - Si home_score > away_score, alors winner doit être home_team.
+   - `match_id`, `home_team`, `away_team`, `home_score`, `away_score`, `winner` doivent être NOT NULL.
+   - La valeur du champ `winner` doit être soit le nom d'une équipe (home_team ou away_team), soit "draw".
+   - Si home_score > away_score, alors winner doit être home_team.
 ```
 
 #### 1.3 Tests unitaires suggérés
@@ -201,10 +203,10 @@ Décrit les tests de validation pour garantir l'intégrité des données.
 
 ```markdown
 3. **Tests unitaires suggérés** :
-    - Vérifier l'absence de doublons sur `match_id`.
-    - Valider que home_team ≠ away_team pour chaque ligne.
-    - Compter le nombre de victoires, égalités et vérifier les proportions sont raisonnables.
-    - Affirmer que le nombre de lignes en sortie = nombre de pays × nombre d'années avec données valides.
+   - Vérifier l'absence de doublons sur `match_id`.
+   - Valider que home_team ≠ away_team pour chaque ligne.
+   - Compter le nombre de victoires, égalités et vérifier les proportions sont raisonnables.
+   - Affirmer que le nombre de lignes en sortie = nombre de pays × nombre d'années avec données valides.
 ```
 
 ---
@@ -217,23 +219,24 @@ Synthèse des points importants, risques métier et responsabilités.
 ## Notes
 
 - **Incertitudes** :
-    - [Risque ou ambiguïté 1]
-    - [Risque ou ambiguïté 2]
-    - [Risque ou ambiguïté n]
+  - [Risque ou ambiguïté 1]
+  - [Risque ou ambiguïté 2]
+  - [Risque ou ambiguïté n]
 - **Validation** : À compléter par [Nom du validateur] et [Date].
 ```
 
 **Structure** :
 
 1. **Incertitudes** : Lister tous les risques métier, ambiguïtés techniques ou limitations connues du modèle.
-    - Risques de données manquantes ou biaisées.
-    - Hypothèses non validées.
-    - Méthodes fragiles ou approximatives.
-    - Limitations du champ d'application.
-    - Couplages avec d'autres modèles.
+
+   - Risques de données manquantes ou biaisées.
+   - Hypothèses non validées.
+   - Méthodes fragiles ou approximatives.
+   - Limitations du champ d'application.
+   - Couplages avec d'autres modèles.
 
 2. **Validation** : Cadre de responsabilité pour la signature du document.
-    - Format : "À compléter par [Nom du validateur] et [Date]."
+   - Format : "À compléter par [Nom du validateur] et [Date]."
 
 **Exemple complet** :
 
@@ -241,9 +244,9 @@ Synthèse des points importants, risques métier et responsabilités.
 ## Notes
 
 - **Incertitudes** :
-    - Les matchs à l'extérieur ne sont pas pris en compte, ce qui sous-estime le nombre réel de matchs joués et de victoires.
-    - La correspondance équipe-pays est volontairement fragile (matching textuel). Les équipes dont le nom ne contient pas le pays seront perdues.
-    - Le calcul des victoires pourrait être incorrect si les règles métier changent.
+  - Les matchs à l'extérieur ne sont pas pris en compte, ce qui sous-estime le nombre réel de matchs joués et de victoires.
+  - La correspondance équipe-pays est volontairement fragile (matching textuel). Les équipes dont le nom ne contient pas le pays seront perdues.
+  - Le calcul des victoires pourrait être incorrect si les règles métier changent.
 - **Validation** : À compléter par [Nom du validateur] et [Date].
 ```
 
@@ -296,37 +299,37 @@ dbt_project/
 
 1. Copier la structure ci-dessous dans un nouveau fichier `.context.md` :
 
-    ```markdown
-    # Contexte Métier — [nom_du_modèle]
+   ```markdown
+   # Contexte Métier — [nom_du_modèle]
 
-    ## Objectifs
+   ## Objectifs
 
-    - **Finalité** : [...]
-    - **Grain** : [...]
+   - **Finalité** : [...]
+   - **Grain** : [...]
 
-    ## Transformations
+   ## Transformations
 
-    - **Source** : [...]
-    - **Transformation** :
-        - [...]
-    - **Exclusions** : [...]
+   - **Source** : [...]
+   - **Transformation** :
+     - [...]
+   - **Exclusions** : [...]
 
-    ## Champs attendus
+   ## Champs attendus
 
-    | Champ | Format | Nomenclature | Règles/Tests |
-    | ----- | ------ | ------------ | ------------ |
+   | Champ | Format | Nomenclature | Règles/Tests |
+   | ----- | ------ | ------------ | ------------ |
 
-    ## Tests de logique métier
+   ## Tests de logique métier
 
-    1. **Vérification du grain** : [...]
-    2. **Validation des données** : [...]
-    3. **Tests unitaires suggérés** : [...]
+   1. **Vérification du grain** : [...]
+   2. **Validation des données** : [...]
+   3. **Tests unitaires suggérés** : [...]
 
-    ## Notes
+   ## Notes
 
-    - **Incertitudes** : [...]
-    - **Validation** : À compléter par [Nom] et [Date].
-    ```
+   - **Incertitudes** : [...]
+   - **Validation** : À compléter par [Nom] et [Date].
+   ```
 
 2. Remplir chaque section en suivant les directives ci-dessus.
 

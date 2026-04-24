@@ -182,13 +182,13 @@ Le tableau de bord est accessible à http://localhost:3000
 
 ```yaml
 dbt_poc:
-    target: dev
-    outputs:
-        dev:
-            type: duckdb
-            path: "dbt.duckdb"
-            schema: "main"
-            threads: 4
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "dbt.duckdb"
+      schema: "main"
+      threads: 4
 ```
 
 ## 📝 Documentation

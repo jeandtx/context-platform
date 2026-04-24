@@ -1,0 +1,32 @@
+[sqlfluff]
+# DuckDB dialect
+dialect = duckdb
+
+# Maximum line length
+max_line_length = 100
+
+# Indentation
+indent_unit = space
+indent_size = 2
+
+# Template handling (for dbt)
+templater = jinja
+
+[sqlfluff:templater:jinja]
+apply_dbt_macros = true
+
+[sqlfluff:templater:jinja:context]
+# Add any Jinja context variables here if needed
+# var_name = "value"
+
+[sqlfluff:rules]
+# dbt-specific rules
+allow_scalar = false
+
+# Exclusions
+[sqlfluff:indentation]
+indent_unit = space
+tab_space_size = 2
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = consistent

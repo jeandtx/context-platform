@@ -5,10 +5,15 @@ build/
 dist/
 wheels/
 *.egg-info
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
 # Virtual environments
 .venv
-
+venv/
+ENV/
 
 # dbt project
 target/
@@ -20,6 +25,26 @@ dbt_packages/
 logs/
 .DS_Store
 
-# Node.js
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Pre-commit
+.pre-commit-framework/
+.pre-commit/
+
+# Evidence.dev
 node_modules/
+reports/node_modules/
 .evidence/
+
+# Secrets
+.secrets.baseline
+
+# OS
+.DS_Store
+Thumbs.db
