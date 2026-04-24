@@ -39,6 +39,5 @@ known-third-party = ["dbt_core", "evidence"]
 
 [format]
 quote-style = "double"
-indent-width = 4
 skip-magic-trailing-comma = false
 line-ending = "lf"

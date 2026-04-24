@@ -27,12 +27,14 @@ For each referenced upstream model (excluding the current model), read its `.con
 Write the SQL for `{model_name}.sql` following these rules:
 
 **DuckDB conventions:**
+
 - Use `{{ ref('model_name') }}` for all upstream references (literal double-braces, Jinja syntax)
 - Use `try_cast(expr as type)` for safe type casting
 - Use `::type` for reliable casts
 - Use `UNPIVOT` for wide-to-long transformations
 
 **dbt materialization:**
+
 - `dim_*`, `fact_*`, `kpi_*` models: add `{{ config(materialized='table') }}` at the top
 - `stg_*`, `raw_*` models: no config block (defaults to view)
 
@@ -51,6 +53,7 @@ Write the SQL for `{model_name}.sql` following these rules:
 ### Step 4 — Generate the schema.yml entry
 
 Produce a valid dbt `schema.yml` entry (YAML) for this model with:
+
 - `name:` matching the model
 - `description:` from the context file's Finalité
 - `columns:` for every field in "Champs attendus", with `description:` and `tests:` (not_null, unique, accepted_values where documented)
@@ -65,6 +68,7 @@ Produce a valid dbt `schema.yml` entry (YAML) for this model with:
 ### Step 6 — Report
 
 Return a concise summary:
+
 - Which files were written
 - Which bugs were fixed (one line each)
 - Which ambiguous decisions were made

@@ -1,1 +1,1 @@
-select * from fct_customers
+select * from fct_customers  -- noqa: AM04

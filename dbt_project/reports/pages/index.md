@@ -4,7 +4,8 @@ title: Welcome to Evidence
 
 <Details title='How to edit this page'>
 
-  This page can be found in your project at `/pages/index.md`. Make a change to the markdown file and save it to see the change take effect in your browser.
+This page can be found in your project at `/pages/index.md`. Make a change to the markdown file and save it to see the change take effect in your browser.
+
 </Details>
 
 ```sql categories
@@ -26,7 +27,7 @@ title: Welcome to Evidence
 </Dropdown>
 
 ```sql orders_by_category
-  select 
+  select
       date_trunc('month', order_datetime) as month,
       sum(sales) as sales_usd,
       category
@@ -46,19 +47,19 @@ title: Welcome to Evidence
 />
 
 ```sql top_customers
-  select 
+  select
       name, email,
       order_amount, customer_segment
   from sport.customers
 ```
 
 <DataTable
-    data={top_customers}
-    title="Top Customers"
-    columns={[
-        {name: "Name", value: "name"},
-        {name: "Email", value: "email"},
-        {name: "Order Amount", value: "order_amount"},
-        {name: "Customer Segment", value: "customer_segment"},
-    ]}
+data={top_customers}
+title="Top Customers"
+columns={[
+{name: "Name", value: "name"},
+{name: "Email", value: "email"},
+{name: "Order Amount", value: "order_amount"},
+{name: "Customer Segment", value: "customer_segment"},
+]}
 />

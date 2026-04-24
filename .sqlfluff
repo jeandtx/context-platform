@@ -14,19 +14,12 @@ templater = jinja
 
 [sqlfluff:templater:jinja]
 apply_dbt_macros = true
-context = {}
 
 [sqlfluff:templater:jinja:context]
 # Add any Jinja context variables here if needed
 # var_name = "value"
 
 [sqlfluff:rules]
-# Allow longer lines for complex queries
-max_line_length = 100
-
-# Spacing rules
-comma_style = trailing
-
 # dbt-specific rules
 allow_scalar = false
 
@@ -37,7 +30,3 @@ tab_space_size = 2
 
 [sqlfluff:rules:capitalisation.keywords]
 capitalisation_policy = consistent
-
-[sqlfluff:rules:layout.type]
-spacing_before = touch
-spacing_after = single

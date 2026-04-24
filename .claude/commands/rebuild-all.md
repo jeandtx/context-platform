@@ -18,6 +18,7 @@ dbt_project/models/**/*.context.md
 Collect the list. Exclude `e2e_test_suite` (not a model).
 
 For each file, note:
+
 - **model name** — filename without `.context.md`
 - **layer** — `staging` if `raw_*` or `stg_*`, otherwise `marts`
 
@@ -25,7 +26,7 @@ For each file, note:
 
 ## Phase 2 — Build lineage
 
-For each context file, read it and extract **upstream model references**: scan for any token matching `raw_\w+`, `stg_\w+`, `dim_\w+`, `fact_\w+`, `kpi_\w+` in the Transformations / Sources section that is *not* the model itself.
+For each context file, read it and extract **upstream model references**: scan for any token matching `raw_\w+`, `stg_\w+`, `dim_\w+`, `fact_\w+`, `kpi_\w+` in the Transformations / Sources section that is _not_ the model itself.
 
 Build a dependency graph: `model → [upstream models it depends on]`.
 
@@ -86,6 +87,7 @@ cd "/Users/ippon/Documents/CODE/INTERCONTRAT/context platform/dbt project/dbt_pr
 ```
 
 If `dbt run` fails for any model in the wave:
+
 - Show the error output
 - Attempt to diagnose (read the generated SQL for the failing model)
 - Apply a fix directly to the SQL file
@@ -133,6 +135,7 @@ cd "/Users/ippon/Documents/CODE/INTERCONTRAT/context platform/dbt project/dbt_pr
 ```
 
 If any tests fail:
+
 - Identify whether it is a **data quality issue** (the data genuinely violates the rule) or a **test definition issue** (the constraint in `schema.yml` is wrong)
 - For test definition issues: fix `schema.yml` and rerun `dbt test --select {model}`
 - For data quality issues: report them clearly but do not silently remove the test — surface them to the user
@@ -143,12 +146,13 @@ If any tests fail:
 
 Produce a summary table:
 
-| Wave | Model | SQL | dbt run | Tests |
-|------|-------|-----|---------|-------|
-| 0 | raw_matches | ✔ written | ✔ | — |
-| ... | | | | |
+| Wave | Model       | SQL        | dbt run | Tests |
+| ---- | ----------- | ---------- | ------- | ----- |
+| 0    | raw_matches | ✔ written | ✔      | —     |
+| ...  |             |            |         |       |
 
 Then list:
+
 - **Bugs fixed** (from sql-regenerator)
 - **Test failures** that are data quality issues (need human review)
 - **Any unresolved ambiguities** from context files

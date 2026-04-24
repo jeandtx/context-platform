@@ -28,11 +28,13 @@ python scripts/compare_snapshots_analysis.py --output report.md --json
 ```
 
 Dashboard (Evidence.dev):
+
 ```bash
 npm --prefix ./dbt_project/reports run dev   # http://localhost:3000
 ```
 
 Python env:
+
 ```bash
 uv venv .venv && uv sync   # first-time setup
 ```
@@ -54,7 +56,7 @@ Snapshots in `dbt_project/snapshots/` use `check` strategy on all columns with `
 
 ### Context Files (`.context.md`) — Source of Truth
 
-Every model has a companion `.context.md` file (same directory). These are the **authoritative source** for what a model should do — the SQL is generated *from* them. Schema defined in `CONTEXT-SCHEMA.md`.
+Every model has a companion `.context.md` file (same directory). These are the **authoritative source** for what a model should do — the SQL is generated _from_ them. Schema defined in `CONTEXT-SCHEMA.md`.
 
 The `/regen` command regenerates SQL + `schema.yml` entries from `.context.md` files. **When editing model logic, edit the `.context.md` first**, then run `/regen <model_name>`.
 
@@ -77,14 +79,14 @@ Together these form the "Context Platform" concept being demonstrated.
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `dbt_project/dbt_project.yml` | dbt config, materialization defaults |
-| `profiles.yml` | DuckDB connection (`path: dbt.duckdb`, schema: `main`) |
-| `CONTEXT-SCHEMA.md` | Standard schema for all `.context.md` files |
-| `scripts/compare_snapshots_analysis.py` | Snapshot diff analysis utility |
-| `.claude/settings.json` | Allowed dbt commands + context file hooks |
-| `dbt_project/reports/` | Evidence.dev dashboard (Markdown pages) |
+| File                                    | Purpose                                                |
+| --------------------------------------- | ------------------------------------------------------ |
+| `dbt_project/dbt_project.yml`           | dbt config, materialization defaults                   |
+| `profiles.yml`                          | DuckDB connection (`path: dbt.duckdb`, schema: `main`) |
+| `CONTEXT-SCHEMA.md`                     | Standard schema for all `.context.md` files            |
+| `scripts/compare_snapshots_analysis.py` | Snapshot diff analysis utility                         |
+| `.claude/settings.json`                 | Allowed dbt commands + context file hooks              |
+| `dbt_project/reports/`                  | Evidence.dev dashboard (Markdown pages)                |
 
 ## Profiles
 

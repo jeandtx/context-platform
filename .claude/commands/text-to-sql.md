@@ -24,15 +24,15 @@ Also read any `.context.md` files that seem relevant to the question (glob `dbt_
 
 Based on the question, decide which tables to use. Prefer the marts layer:
 
-| Table | Contains |
-|-------|---------|
-| `dim_countries` | country_name, iso2 |
-| `dim_teams` | team_id, team_name, team_gender, team_country |
-| `dim_matches` | match_id, match_date, home_team, away_team, home_score, away_score, winner |
-| `dim_population` | country_name, country_code, indicator_name, indicator_code, year, population_value |
-| `dim_team_country` | team_name, country_name |
-| `fact_country_performance` | country_name, matches_played, wins |
-| `kpi_performance_vs_population` | country_name, wins, population_value, performance_ratio |
+| Table                           | Contains                                                                           |
+| ------------------------------- | ---------------------------------------------------------------------------------- |
+| `dim_countries`                 | country_name, iso2                                                                 |
+| `dim_teams`                     | team_id, team_name, team_gender, team_country                                      |
+| `dim_matches`                   | match_id, match_date, home_team, away_team, home_score, away_score, winner         |
+| `dim_population`                | country_name, country_code, indicator_name, indicator_code, year, population_value |
+| `dim_team_country`              | team_name, country_name                                                            |
+| `fact_country_performance`      | country_name, matches_played, wins                                                 |
+| `kpi_performance_vs_population` | country_name, wins, population_value, performance_ratio                            |
 
 Staging views are in the same DuckDB schema (`main`) as the marts tables.
 

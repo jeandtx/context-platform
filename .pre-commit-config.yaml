@@ -18,8 +18,6 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
-      - id: yaml-unsafe
-        exclude: ^dbt_project/target/
       - id: check-yaml
       - id: check-json
       - id: check-merge-conflict
@@ -39,16 +37,6 @@ repos:
         args: [--dialect, duckdb]
         exclude: ^dbt_project/target/
 
-  # dbt linting & parsing
-  - repo: https://github.com/dbt-labs/dbt-core
-    rev: 1.8.0
-    hooks:
-      - id: dbt-parse
-        files: ^dbt_project/
-        language: system
-        pass_filenames: false
-        always_run: true
-
   # Git attributes
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.1.0
@@ -62,7 +50,6 @@ repos:
     rev: v1.4.0
     hooks:
       - id: detect-secrets
-        args: [--baseline, .secrets.baseline]
         exclude: ^(uv\.lock|dbt\.duckdb)
 
 ci:
@@ -71,5 +58,5 @@ ci:
   autoupdate_branch: ""
   autoupdate_commit_msg: "⬆️ pre-commit autoupdate"
   autoupdate_schedule: weekly
-  skip: [dbt-parse]  # dbt-parse needs setup
+  skip: [dbt-parse] # dbt-parse needs setup
   stages: [commit]

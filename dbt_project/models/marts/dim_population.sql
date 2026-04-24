@@ -9,7 +9,7 @@ select
     year::integer as year,
     population as population_value
 from (
-    select 
+    select
         "Country Name",
         "Country Code",
         "Indicator Name",

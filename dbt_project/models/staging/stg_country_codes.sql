@@ -2,6 +2,6 @@
 {{ config(materialized='view') }}
 
 select
-    name,
-    code
+  name,
+  code
 from {{ ref('raw_country_codes') }}
