@@ -19,3 +19,7 @@ dbt_packages/
 .vscode/
 logs/
 .DS_Store
+
+# Node.js
+node_modules/
+.evidence/
