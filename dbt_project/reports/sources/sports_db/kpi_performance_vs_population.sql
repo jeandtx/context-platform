@@ -1,0 +1,1 @@
+select * from kpi_performance_vs_population

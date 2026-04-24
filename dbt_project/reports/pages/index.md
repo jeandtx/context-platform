@@ -1,65 +1,32 @@
 ---
-title: Welcome to Evidence
+title: Rapport Sportif — Context Platform
 ---
 
-<Details title='How to edit this page'>
+# 🏆 Rapport Sportif
 
-This page can be found in your project at `/pages/index.md`. Make a change to the markdown file and save it to see the change take effect in your browser.
+Bienvenue sur le rapport de données sportives du projet **Context Platform**.
+Ce tableau de bord analyse les performances des équipes nationales à travers les matchs internationaux.
 
-</Details>
+## Navigation
 
-```sql categories
-  select
-      category
-  from needful_things.orders
-  group by category
+- [📊 Performances par pays](/performances) — KPIs et ratio performance/population
+- [⚽ Matchs](/matchs) — Résultats et scores détaillés
+- [🌍 Équipes & Pays](/equipes) — Référentiel des équipes et pays
+
+## Vue d'ensemble
+
+```sql total_matches
+SELECT COUNT(*) as nb_matchs FROM sports_db.dim_matches
 ```
 
-<Dropdown data={categories} name=category value=category>
-    <DropdownOption value="%" valueLabel="All Categories"/>
-</Dropdown>
-
-<Dropdown name=year>
-    <DropdownOption value=% valueLabel="All Years"/>
-    <DropdownOption value=2019/>
-    <DropdownOption value=2020/>
-    <DropdownOption value=2021/>
-</Dropdown>
-
-```sql orders_by_category
-  select
-      date_trunc('month', order_datetime) as month,
-      sum(sales) as sales_usd,
-      category
-  from needful_things.orders
-  where category like '${inputs.category.value}'
-  and date_part('year', order_datetime) like '${inputs.year.value}'
-  group by all
-  order by sales_usd desc
+```sql total_teams
+SELECT COUNT(*) as nb_equipes FROM sports_db.dim_teams
 ```
 
-<BarChart
-    data={orders_by_category}
-    title="Sales by Month, {inputs.category.label}"
-    x=month
-    y=sales_usd
-    series=category
-/>
-
-```sql top_customers
-  select
-      name, email,
-      order_amount, customer_segment
-  from sport.customers
+```sql total_countries
+SELECT COUNT(*) as nb_pays FROM sports_db.dim_countries
 ```
 
-<DataTable
-data={top_customers}
-title="Top Customers"
-columns={[
-{name: "Name", value: "name"},
-{name: "Email", value: "email"},
-{name: "Order Amount", value: "order_amount"},
-{name: "Customer Segment", value: "customer_segment"},
-]}
-/>
+<BigValue data={total_matches} value=nb_matchs title="Total Matchs" />
+<BigValue data={total_teams} value=nb_equipes title="Équipes" />
+<BigValue data={total_countries} value=nb_pays title="Pays" />

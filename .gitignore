@@ -40,6 +40,7 @@ logs/
 # Evidence.dev
 node_modules/
 reports/node_modules/
+.evidence/
 
 # Secrets
 .secrets.baseline
