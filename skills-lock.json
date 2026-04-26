@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "text-to-sql": {
+      "source": "oimiragieo/agent-studio",
+      "sourceType": "github",
+      "computedHash": "01cc89dea200906485aaf709b3899a14a71106480c0d38696d0e023142b18be5"
+    }
+  }
+}

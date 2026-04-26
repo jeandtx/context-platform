@@ -50,7 +50,7 @@ repos:
     rev: v1.4.0
     hooks:
       - id: detect-secrets
-        exclude: ^(uv\.lock|dbt\.duckdb)
+        exclude: ^(uv\.lock|dbt\.duckdb|skills-lock.json)$
 
 ci:
   autofix_commit_msg: "🔧 pre-commit auto-fixes"
