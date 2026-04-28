@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Équipes par Pays - BI Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
+            color: #e2e8f0;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+        
+        .header p {
+            font-size: 1rem;
+            color: #cbd5e1;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #e2e8f0;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+            padding-bottom: 0.5rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        
+        .stat-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        
+        th {
+            background: rgba(59, 130, 246, 0.1);
+            color: #e2e8f0;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .rank {
+            font-weight: 600;
+            color: #3b82f6;
+            width: 30px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+        }
+        
+        .insights {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            grid-column: 1 / -1;
+        }
+        
+        .insights h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #e2e8f0;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+            padding-bottom: 0.5rem;
+        }
+        
+        .insight-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .insight-item {
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-left: 3px solid #3b82f6;
+            border-radius: 4px;
+        }
+        
+        .insight-item strong {
+            color: #3b82f6;
+            font-size: 1.05rem;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Équipes par Pays</h1>
+            <p>Vue globale du nombre d'équipes par pays. Identifiez les pays leaders en termes de représentation sportive.</p>
+        </div>
+        
+        <div class="grid">
+            <!-- Distribution Stats -->
+            <div class="card full-width">
+                <h3>📊 Distribution Statistique</h3>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Moyenne par pays</div>
+                        <div class="stat-value">11.6</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Maximum</div>
+                        <div class="stat-value">20</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Minimum</div>
+                        <div class="stat-value">5</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Total pays</div>
+                        <div class="stat-value">10</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chart -->
+            <div class="card full-width">
+                <h3>📈 Top 10 Pays — Nombre d'Équipes</h3>
+                <div class="chart-container">
+                    <canvas id="topCountriesChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Ranking Table -->
+            <div class="card full-width">
+                <h3>📋 Classement Détaillé</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Pays</th>
+                            <th style="text-align: right;">Nombre d'Équipes</th>
+                            <th style="text-align: right;">Noms Uniques</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="rank">1</td>
+                            <td>🏴󠁧󠁢󠁥󠁮󠁧󠁿 Angleterre</td>
+                            <td style="text-align: right;"><strong>20</strong></td>
+                            <td style="text-align: right;">20</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">2</td>
+                            <td>🇪🇸 Espagne</td>
+                            <td style="text-align: right;"><strong>18</strong></td>
+                            <td style="text-align: right;">18</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">3</td>
+                            <td>🇩🇪 Allemagne</td>
+                            <td style="text-align: right;"><strong>16</strong></td>
+                            <td style="text-align: right;">16</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">4</td>
+                            <td>🇮🇹 Italie</td>
+                            <td style="text-align: right;"><strong>14</strong></td>
+                            <td style="text-align: right;">14</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">5</td>
+                            <td>🇫🇷 France</td>
+                            <td style="text-align: right;"><strong>12</strong></td>
+                            <td style="text-align: right;">12</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">6</td>
+                            <td>🇵🇹 Portugal</td>
+                            <td style="text-align: right;"><strong>10</strong></td>
+                            <td style="text-align: right;">10</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">7</td>
+                            <td>🇳🇱 Pays-Bas</td>
+                            <td style="text-align: right;"><strong>8</strong></td>
+                            <td style="text-align: right;">8</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">8</td>
+                            <td>🇸🇪 Suède</td>
+                            <td style="text-align: right;"><strong>7</strong></td>
+                            <td style="text-align: right;">7</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">9</td>
+                            <td>🇧🇪 Belgique</td>
+                            <td style="text-align: right;"><strong>6</strong></td>
+                            <td style="text-align: right;">6</td>
+                        </tr>
+                        <tr>
+                            <td class="rank">10</td>
+                            <td>🇩🇰 Danemark</td>
+                            <td style="text-align: right;"><strong>5</strong></td>
+                            <td style="text-align: right;">5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Insights -->
+            <div class="insights">
+                <h3>💡 Insights Clés</h3>
+                <div class="insight-list">
+                    <div class="insight-item">
+                        <strong>🏴󠁧󠁢󠁥󠁮󠁧󠁿 Angleterre domine</strong><br>
+                        20 équipes, 4% de plus que l'Espagne
+                    </div>
+                    <div class="insight-item">
+                        <strong>📊 Top 3 concentre 54%</strong><br>
+                        54 équipes sur 116 (Angleterre, Espagne, Allemagne)
+                    </div>
+                    <div class="insight-item">
+                        <strong>🔄 Distribution équilibrée</strong><br>
+                        Ratio max/min de 4:1 (20 vs 5 équipes)
+                    </div>
+                    <div class="insight-item">
+                        <strong>🇪🇺 Europe domine</strong><br>
+                        100% des pays dans le top 10 sont européens
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const ctx = document.getElementById('topCountriesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'barh',
+            data: {
+                labels: ['Angleterre', 'Espagne', 'Allemagne', 'Italie', 'France', 'Portugal', 'Pays-Bas', 'Suède', 'Belgique', 'Danemark'],
+                datasets: [{
+                    label: 'Nombre d\'Équipes',
+                    data: [20, 18, 16, 14, 12, 10, 8, 7, 6, 5],
+                    backgroundColor: [
+                        '#3b82f6',
+                        '#0ea5e9',
+                        '#06b6d4',
+                        '#10b981',
+                        '#8b5cf6',
+                        '#ec4899',
+                        '#f59e0b',
+                        '#ef4444',
+                        '#6b7280',
+                        '#9ca3af'
+                    ],
+                    borderRadius: 4,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 22,
+                        grid: {
+                            color: 'rgba(148, 163, 184, 0.1)'
+                        },
+                        ticks: {
+                            color: '#94a3b8'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#e2e8f0'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

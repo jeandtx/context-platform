@@ -1,0 +1,8 @@
+dbt_poc:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: 'target/dbt.duckdb'
+      threads: 1
+      timeout_seconds: 300
