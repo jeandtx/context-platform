@@ -116,18 +116,19 @@ models:
 
   # FACT TABLES
   - name: fact_country_performance
-    description: Fact table containing country performance metrics in sports matches
+    description: Fournir une table de faits mesurant les performances sportives agrégées par pays (matchs joués et victoires). Une ligne par pays unique ; seuls les matchs à domicile sont comptabilisés.
     columns:
       - name: country_name
-        description: Country name
+        description: Nom du pays, issu de dim_team_country.
         tests:
           - not_null
+          - unique
       - name: matches_played
-        description: Total number of matches played by teams from this country
+        description: Nombre de matchs joués à domicile par les équipes du pays (valeur >= 0).
         tests:
           - not_null
       - name: wins
-        description: Total number of wins by teams from this country
+        description: Nombre de victoires à domicile des équipes du pays (valeur >= 0 et <= matches_played).
         tests:
           - not_null
 
