@@ -13,10 +13,16 @@ from mcp.server.fastmcp import FastMCP
 
 try:
     if os.environ.get("CONTEXT_CORE_STUBS"):
-        raise ImportError
+        raise ModuleNotFoundError(name="context_core")
     from context_core import api
-except ImportError:
+except ModuleNotFoundError as exc:
+    # Repli sur les stubs uniquement si context_core est absent. Une dépendance
+    # manquante à l'intérieur de context_core doit remonter, pas être masquée.
+    if exc.name != "context_core":
+        raise
     from mcp_server import stubs as api
+
+print(f"[mcp_server] backend: {api.__name__}", file=sys.stderr)
 
 mcp = FastMCP("context-platform", host="127.0.0.1", port=8765)
 
