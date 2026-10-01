@@ -6,7 +6,7 @@ import os
 
 os.environ["CONTEXT_CORE_STUBS"] = "1"
 
-from mcp_server.server import mcp  # noqa: E402
+from mcp_server.server import mcp
 
 CONTRACT = {
     "list_models": {},

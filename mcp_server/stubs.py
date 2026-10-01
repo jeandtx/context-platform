@@ -18,7 +18,7 @@ def get_context(model: str) -> dict:
     return {"model": model, "sections": {}, "columns": [], "stub": True}
 
 
-def get_lineage(model: str) -> dict:
+def get_lineage(model: str) -> dict:  # noqa: ARG001
     return {"parents": [], "children": [], "stub": True}
 
 
