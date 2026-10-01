@@ -1,1 +1,0 @@
-- [Context Platform dbt POC](project_context_platform.md) — ECL/context bubble POC on dbt+DuckDB, being evaluated for pitch/adoption at Ippon
