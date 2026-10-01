@@ -42,7 +42,11 @@ node_modules/
 reports/node_modules/
 .evidence/
 
+# Propositions de propose_change
+.context_platform/
+
 # Secrets
+.env
 .secrets.baseline
 
 # OS

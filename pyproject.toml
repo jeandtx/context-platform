@@ -10,6 +10,8 @@ dependencies = [
     "dbt-duckdb>=1.8.0",
     "evidence>=0.3.0",
     "mcp>=1.2,<2",
+    "anthropic>=1.11.0",
+    "pyyaml>=6.0.3",
 ]
 
 [project.optional-dependencies]
